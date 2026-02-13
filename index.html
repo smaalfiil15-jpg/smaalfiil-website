@@ -1,0 +1,3190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMA AL-FIIL - Berprestasi, Mandiri, dan Kreatif</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0d7377;
+            --primary-dark: #094e50;
+            --primary-light: #14a8ad;
+            --secondary: #32e0c4;
+            --accent: #f4a261;
+            --accent-dark: #e76f51;
+            --light: #f0f9ff;
+            --white: #ffffff;
+            --text: #1a202c;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --gradient-1: linear-gradient(135deg, #0d7377 0%, #14a8ad 100%);
+            --gradient-2: linear-gradient(135deg, #32e0c4 0%, #14a8ad 100%);
+            --gradient-3: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(30, 81, 40, 0.08);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            box-shadow: 0 4px 30px rgba(30, 81, 40, 0.12);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 15px rgba(13, 115, 119, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            display: block;
+        }
+
+        .logo.has-image .logo-text {
+            display: none;
+        }
+
+        .school-name {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .school-name h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .school-name p {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 92px;
+            background: var(--gradient-1);
+            color: white;
+            padding: 6rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero.has-background {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .hero.has-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(13, 115, 119, 0.9), rgba(20, 168, 173, 0.85));
+            z-index: 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h60v60H0z" fill="none"/><path d="M30 0L60 30L30 60L0 30z" fill="rgba(255,255,255,0.03)"/></svg>');
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .hero.has-background .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: rotate(-2deg);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: rotate(-2deg) translateY(0); }
+            50% { transform: rotate(-2deg) translateY(-20px); }
+        }
+
+        .hero-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-card p {
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* Profile Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(30, 81, 40, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(30, 81, 40, 0.15);
+            border-color: var(--secondary);
+        }
+
+        .profile-card h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-card ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .profile-card li {
+            padding: 0.6rem 0;
+            color: var(--text);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .profile-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        /* Facilities */
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .facility-card {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--light) 0%, #ffffff 100%);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+        }
+
+        .facility-card:hover {
+            transform: scale(1.05);
+            border-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(78, 159, 61, 0.2);
+        }
+
+        .facility-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--gradient-2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .facility-card h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .news-content {
+            padding: 1.5rem;
+        }
+
+        .news-date {
+            color: var(--secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-card h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .news-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            height: 300px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .gallery-overlay p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Ekstrakurikuler */
+        .ekskul-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ekskul-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+        }
+
+        .ekskul-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(216, 164, 25, 0.2);
+        }
+
+        .ekskul-image {
+            width: 100%;
+            height: 150px;
+            background: var(--gradient-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ekskul-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ekskul-image.has-photo {
+            background: none;
+        }
+
+        .ekskul-content {
+            padding: 1.5rem;
+        }
+
+        .ekskul-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: var(--gradient-3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .ekskul-card h4 {
+            color: var(--primary);
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Form */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .contact-details h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .contact-details p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .contact-details a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-details a:hover {
+            color: var(--primary);
+        }
+
+        .contact-form {
+            background: var(--light);
+            padding: 2.5rem;
+            border-radius: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(78, 159, 61, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-1);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 115, 119, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--gradient-3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Social Media */
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn.instagram {
+            background: linear-gradient(135deg, #8a3ab9, #e95950);
+        }
+
+        .social-btn.tiktok {
+            background: #000000;
+        }
+
+        .social-btn.youtube {
+            background: #FF0000;
+        }
+
+        .social-btn.whatsapp {
+            background: #25D366;
+        }
+
+        .social-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 3rem 2rem 1.5rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .footer-section p,
+        .footer-section li {
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0.8;
+        }
+
+        /* Registration Section */
+        .registration-cta {
+            background: var(--gradient-3);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .registration-cta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .registration-cta p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .admin-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(13, 115, 119, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .admin-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
+
+        .admin-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .admin-tab {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .admin-tab.active {
+            color: var(--primary);
+        }
+
+        .admin-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 92px;
+                left: -100%;
+                width: 100%;
+                flex-direction: column;
+                background: white;
+                padding: 2rem;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                transition: left 0.3s ease;
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h2 {
+                font-size: 2.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Data Storage dengan localStorage
+        const useLocalStorage = (key, initialValue) => {
+            const [storedValue, setStoredValue] = useState(() => {
+                try {
+                    const item = window.localStorage.getItem(key);
+                    return item ? JSON.parse(item) : initialValue;
+                } catch (error) {
+                    return initialValue;
+                }
+            });
+
+            const setValue = (value) => {
+                try {
+                    setStoredValue(value);
+                    window.localStorage.setItem(key, JSON.stringify(value));
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+
+            return [storedValue, setValue];
+        };
+
+        // Main App Component
+        function App() {
+            const [activeSection, setActiveSection] = useState('home');
+            const [showAdmin, setShowAdmin] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+            const [logoUrl, setLogoUrl] = useLocalStorage('sma-alfiil-logo', '');
+            const [heroBackground, setHeroBackground] = useLocalStorage('sma-alfiil-hero-bg', '');
+
+            // Data Management
+            const [news, setNews] = useLocalStorage('sma-alfiil-news', [
+                {
+                    id: 1,
+                    title: "Penerimaan Peserta Didik Baru 2026/2027",
+                    date: "10 Februari 2026",
+                    content: "SMA Al-Fiil membuka pendaftaran siswa baru untuk tahun ajaran 2026/2027. Segera daftarkan putra-putri Anda!",
+                    icon: "📚"
+                },
+                {
+                    id: 2,
+                    title: "Prestasi Olimpiade Matematika Tingkat Kabupaten",
+                    date: "5 Februari 2026",
+                    content: "Selamat kepada siswa-siswi SMA Al-Fiil yang meraih juara dalam Olimpiade Matematika tingkat Kabupaten Bandung.",
+                    icon: "🏆"
+                },
+                {
+                    id: 3,
+                    title: "Kegiatan Bakti Sosial",
+                    date: "1 Februari 2026",
+                    content: "SMA Al-Fiil mengadakan bakti sosial di lingkungan sekitar sekolah sebagai wujud kepedulian terhadap masyarakat.",
+                    icon: "🤝"
+                }
+            ]);
+
+            const [gallery, setGallery] = useLocalStorage('sma-alfiil-gallery', [
+                { id: 1, title: "Upacara Bendera", description: "Senin Pagi", icon: "🇮🇩" },
+                { id: 2, title: "Pembelajaran", description: "Kelas X-XII", icon: "📖" },
+                { id: 3, title: "Ekstrakurikuler", description: "Kegiatan Siswa", icon: "⚽" },
+                { id: 4, title: "Lab Komputer", description: "Praktikum IT", icon: "💻" },
+                { id: 5, title: "Perpustakaan", description: "Ruang Baca", icon: "📚" },
+                { id: 6, title: "Acara Sekolah", description: "Event Tahunan", icon: "🎉" }
+            ]);
+
+            const [ekstrakurikuler, setEkstrakurikuler] = useLocalStorage('sma-alfiil-ekskul', [
+                { id: 1, name: "Paskibra", icon: "🎖️", photo: "" },
+                { id: 2, name: "Pramuka", icon: "🏕️", photo: "" },
+                { id: 3, name: "Futsal", icon: "⚽", photo: "" },
+                { id: 4, name: "Basket", icon: "🏀", photo: "" },
+                { id: 5, name: "Voli", icon: "🏐", photo: "" },
+                { id: 6, name: "Badminton", icon: "🏸", photo: "" },
+                { id: 7, name: "Seni Musik", icon: "🎵", photo: "" },
+                { id: 8, name: "Seni Tari", icon: "💃", photo: "" },
+                { id: 9, name: "Teater", icon: "🎭", photo: "" },
+                { id: 10, name: "Jurnalistik", icon: "📰", photo: "" },
+                { id: 11, name: "English Club", icon: "🗣️", photo: "" },
+                { id: 12, name: "Robotika", icon: "🤖", photo: "" }
+            ]);
+
+            const [adminPassword, setAdminPassword] = useLocalStorage('sma-alfiil-admin-pass', 'admin123');
+            const [registrations, setRegistrations] = useLocalStorage('sma-alfiil-registrations', []);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setScrolled(window.scrollY > 50);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const scrollToSection = (section) => {
+                setActiveSection(section);
+                setMobileMenuOpen(false);
+                const element = document.getElementById(section);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            };
+
+            return (
+                <>
+                    <Header 
+                        scrolled={scrolled}
+                        activeSection={activeSection}
+                        scrollToSection={scrollToSection}
+                        mobileMenuOpen={mobileMenuOpen}
+                        setMobileMenuOpen={setMobileMenuOpen}
+                        logoUrl={logoUrl}
+                    />
+                    
+                    <main>
+                        <HeroSection heroBackground={heroBackground} />
+                        <ProfileSection />
+                        <FacilitiesSection />
+                        <EkstrakurikulerSection ekstrakurikuler={ekstrakurikuler} />
+                        <NewsSection news={news} />
+                        <GallerySection gallery={gallery} />
+                        <RegistrationSection registrations={registrations} setRegistrations={setRegistrations} />
+                        <ContactSection />
+                    </main>
+
+                    <Footer scrollToSection={scrollToSection} />
+
+                    <AdminPanel 
+                        showAdmin={showAdmin}
+                        setShowAdmin={setShowAdmin}
+                        news={news}
+                        setNews={setNews}
+                        gallery={gallery}
+                        setGallery={setGallery}
+                        logoUrl={logoUrl}
+                        setLogoUrl={setLogoUrl}
+                        heroBackground={heroBackground}
+                        setHeroBackground={setHeroBackground}
+                        ekstrakurikuler={ekstrakurikuler}
+                        setEkstrakurikuler={setEkstrakurikuler}
+                        adminPassword={adminPassword}
+                        setAdminPassword={setAdminPassword}
+                        registrations={registrations}
+                        setRegistrations={setRegistrations}
+                    />
+                </>
+            );
+        }
+
+        // Header Component
+        function Header({ scrolled, activeSection, scrollToSection, mobileMenuOpen, setMobileMenuOpen, logoUrl }) {
+            return (
+                <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+                    <div className="nav-container">
+                        <div className="logo-section">
+                            <div className={`logo ${logoUrl ? 'has-image' : ''}`}>
+                                {logoUrl ? (
+                                    <img src={logoUrl} alt="Logo SMA Al-Fiil" />
+                                ) : (
+                                    <span className="logo-text">AF</span>
+                                )}
+                            </div>
+                            <div className="school-name">
+                                <h1>SMA AL-FIIL</h1>
+                                <p>FOR THE BRIGHTER FUTURE</p>
+                            </div>
+                        </div>
+                        
+                        <nav>
+                            <ul className={`nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+                                <li><a href="#home" className={activeSection === 'home' ? 'active' : ''} onClick={() => scrollToSection('home')}>Beranda</a></li>
+                                <li><a href="#profile" onClick={() => scrollToSection('profile')}>Profil</a></li>
+                                <li><a href="#facilities" onClick={() => scrollToSection('facilities')}>Fasilitas</a></li>
+                                <li><a href="#ekstrakurikuler" onClick={() => scrollToSection('ekstrakurikuler')}>Ekstrakurikuler</a></li>
+                                <li><a href="#news" onClick={() => scrollToSection('news')}>Berita</a></li>
+                                <li><a href="#gallery" onClick={() => scrollToSection('gallery')}>Galeri</a></li>
+                                <li><a href="#contact" onClick={() => scrollToSection('contact')}>Kontak</a></li>
+                            </ul>
+                        </nav>
+
+                        <button className="mobile-toggle" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                            {mobileMenuOpen ? '✕' : '☰'}
+                        </button>
+                    </div>
+                </header>
+            );
+        }
+
+        // Hero Section
+        function HeroSection({ heroBackground }) {
+            const heroStyle = heroBackground ? {
+                backgroundImage: `url(${heroBackground})`
+            } : {};
+
+            return (
+                <section 
+                    id="home" 
+                    className={`hero ${heroBackground ? 'has-background' : ''}`}
+                    style={heroStyle}
+                >
+                    <div className="hero-content">
+                        <div className="hero-text">
+                            <h2>Membentuk Generasi Tangguh & Berakhlak Mulia</h2>
+                            <p>SMA Al-Fiil hadir sejak 2006 dengan komitmen membentuk siswa yang berprestasi, mandiri, dan kreatif berdasarkan iman dan taqwa.</p>
+                            
+                            <div className="hero-stats">
+                                <div className="stat-item">
+                                    <div className="stat-number">19+</div>
+                                    <div className="stat-label">Tahun Berpengalaman</div>
+                                </div>
+                                <div className="stat-item">
+                                    <div className="stat-number">500</div>
+                                    <div className="stat-label">Alumni</div>
+                                </div>
+                                <div className="stat-item">
+                                    <div className="stat-number">6</div>
+                                    <div className="stat-label">Ekstrakurikuler</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="hero-image">
+                            <div className="hero-card">
+                                <h3>📍 Lokasi Strategis</h3>
+                                <p>Jln. Gajah Eretan No. 19, Gajah Mekar - Kutawaringin, Kab. Bandung</p>
+                                <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#4e9f3d' }}>
+                                    <strong>Berdiri sejak: 3 Mei 2006</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Profile Section
+        function ProfileSection() {
+            return (
+                <section id="profile" className="section">
+                    <div className="section-header">
+                        <h2>Profil Sekolah</h2>
+                        <p>Mengenal lebih dekat visi, misi, dan tujuan SMA Al-Fiil</p>
+                    </div>
+
+                    <div className="profile-grid">
+                        <div className="profile-card">
+                            <h3>🎯 Visi</h3>
+                            <p>"Terwujudnya sekolah yang berprestasi, mandiri, dan kreatif berdasarkan iman dan taqwa."</p>
+                        </div>
+
+                        <div className="profile-card">
+                            <h3>🚀 Misi</h3>
+                            <ul>
+                                <li>Meningkatkan keimanan dan ketaqwaan bagi seluruh warga sekolah</li>
+                                <li>Melaksanakan pembelajaran yang interaktif, inspiratif dan menyenangkan</li>
+                                <li>Menciptakan lingkungan sekolah yang kondusif untuk KBM</li>
+                                <li>Menciptakan kerjasama dengan orang tua dan masyarakat</li>
+                                <li>Mewujudkan fasilitas sekolah yang memadai</li>
+                                <li>Meningkatkan prestasi siswa di bidang seni, budaya dan olahraga</li>
+                                <li>Meningkatkan keterampilan kewirausahaan peserta didik</li>
+                            </ul>
+                        </div>
+
+                        <div className="profile-card">
+                            <h3>🎓 Tujuan Pendidikan</h3>
+                            <ul>
+                                <li>Lingkungan sekolah yang religius dengan suasana ukuwah islamiyah</li>
+                                <li>Lingkungan belajar yang kondusif, nyaman, dan aman</li>
+                                <li>Peningkatan prestasi akademik yang bermutu</li>
+                                <li>Lulusan yang berkualitas dan siap bersaing</li>
+                                <li>Kemitraan harmonis dengan berbagai pihak</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Facilities Section
+        function FacilitiesSection() {
+            const facilities = [
+                { icon: "⚽", name: "Lapangan Olahraga", description: "Sarana pembinaan kesehatan dan sportivitas" },
+                { icon: "💻", name: "Lab Komputer", description: "Pembelajaran berbasis teknologi digital" },
+                { icon: "📚", name: "Perpustakaan", description: "Ruang literasi dan pengembangan wawasan" },
+                { icon: "🔬", name: "Laboratorium", description: "Fasilitas praktikum sains" },
+                { icon: "🕌", name: "Mushola", description: "Sarana ibadah dan kegiatan keagamaan" },
+                { icon: "🎨", name: "Ruang Seni", description: "Pengembangan kreativitas siswa" }
+            ];
+
+            return (
+                <section id="facilities" className="section" style={{ background: 'var(--light)' }}>
+                    <div className="section-header">
+                        <h2>Fasilitas Sekolah</h2>
+                        <p>Fasilitas penunjang untuk pengembangan potensi siswa secara optimal</p>
+                    </div>
+
+                    <div className="facilities-grid">
+                        {facilities.map((facility, index) => (
+                            <div key={index} className="facility-card">
+                                <div className="facility-icon">{facility.icon}</div>
+                                <h3>{facility.name}</h3>
+                                <p>{facility.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        }
+
+        // Ekstrakurikuler Section
+        function EkstrakurikulerSection({ ekstrakurikuler }) {
+            return (
+                <section id="ekstrakurikuler" className="section">
+                    <div className="section-header">
+                        <h2>Ekstrakurikuler</h2>
+                        <p>Beragam kegiatan untuk mengembangkan bakat dan minat siswa</p>
+                    </div>
+
+                    <div className="ekskul-grid">
+                        {ekstrakurikuler.map((ekskul, index) => (
+                            <div key={index} className="ekskul-card">
+                                <div className={`ekskul-image ${ekskul.photo ? 'has-photo' : ''}`}>
+                                    {ekskul.photo ? (
+                                        <img src={ekskul.photo} alt={ekskul.name} />
+                                    ) : (
+                                        <span>{ekskul.icon}</span>
+                                    )}
+                                </div>
+                                <div className="ekskul-content">
+                                    <h4>{ekskul.name}</h4>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        }
+
+        // News Section
+        function NewsSection({ news }) {
+            return (
+                <section id="news" className="section" style={{ background: 'var(--light)' }}>
+                    <div className="section-header">
+                        <h2>Berita Terkini</h2>
+                        <p>Informasi dan kegiatan terbaru SMA Al-Fiil</p>
+                    </div>
+
+                    <div className="news-grid">
+                        {news.map((item) => (
+                            <div key={item.id} className="news-card">
+                                <div className="news-image">{item.icon}</div>
+                                <div className="news-content">
+                                    <div className="news-date">{item.date}</div>
+                                    <h3>{item.title}</h3>
+                                    <p>{item.content}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        }
+
+        // Gallery Section
+        function GallerySection({ gallery }) {
+            return (
+                <section id="gallery" className="section">
+                    <div className="section-header">
+                        <h2>Galeri Kegiatan</h2>
+                        <p>Dokumentasi kegiatan dan kehidupan di SMA Al-Fiil</p>
+                    </div>
+
+                    <div className="gallery-grid">
+                        {gallery.map((item) => (
+                            <div key={item.id} className="gallery-item">
+                                <span style={{ fontSize: '5rem' }}>{item.icon}</span>
+                                <div className="gallery-overlay">
+                                    <h4>{item.title}</h4>
+                                    <p>{item.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        }
+
+        // Registration Section
+        function RegistrationSection({ registrations, setRegistrations }) {
+            const [showForm, setShowForm] = useState(false);
+            const [formData, setFormData] = useState({
+                namaLengkap: '',
+                nisn: '',
+                tempatLahir: '',
+                tanggalLahir: '',
+                jenisKelamin: '',
+                agama: '',
+                alamat: '',
+                noHP: '',
+                asalSekolah: '',
+                namaAyah: '',
+                pekerjaanAyah: '',
+                namaIbu: '',
+                pekerjaanIbu: '',
+                noHPOrtu: ''
+            });
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                
+                const newRegistration = {
+                    ...formData,
+                    id: Date.now(),
+                    timestamp: new Date().toLocaleString('id-ID', { 
+                        day: '2-digit', 
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
+
+                setRegistrations([...registrations, newRegistration]);
+                
+                // Kirim ke Google Sheets
+                try {
+                    const googleSheetsUrl = localStorage.getItem('sma-alfiil-google-sheets-url');
+                    
+                    if (googleSheetsUrl) {
+                        const response = await fetch(googleSheetsUrl, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(newRegistration)
+                        });
+                        console.log('Data terkirim ke Google Sheets');
+                    }
+                } catch (error) {
+                    console.log('Gagal kirim ke Google Sheets:', error);
+                }
+                
+                // WhatsApp notification ke admin
+                const waMessage = `🎓 PENDAFTARAN SISWA BARU SMA AL-FIIL 🎓%0A%0A` +
+                    `Nama: ${formData.namaLengkap}%0A` +
+                    `NISN: ${formData.nisn}%0A` +
+                    `TTL: ${formData.tempatLahir}, ${formData.tanggalLahir}%0A` +
+                    `Jenis Kelamin: ${formData.jenisKelamin}%0A` +
+                    `Agama: ${formData.agama}%0A` +
+                    `Alamat: ${formData.alamat}%0A` +
+                    `No HP: ${formData.noHP}%0A` +
+                    `Asal Sekolah: ${formData.asalSekolah}%0A` +
+                    `Nama Ayah: ${formData.namaAyah} (${formData.pekerjaanAyah})%0A` +
+                    `Nama Ibu: ${formData.namaIbu} (${formData.pekerjaanIbu})%0A` +
+                    `No HP Ortu: ${formData.noHPOrtu}%0A%0A` +
+                    `Terima kasih telah mendaftar di SMA Al-Fiil!`;
+
+                window.open(`https://wa.me/6285659627944?text=${waMessage}`, '_blank');
+                
+                alert('Pendaftaran berhasil dikirim! Data Anda sudah tersimpan dan notifikasi telah dikirim ke admin via WhatsApp.');
+                
+                // Reset form
+                setFormData({
+                    namaLengkap: '',
+                    nisn: '',
+                    tempatLahir: '',
+                    tanggalLahir: '',
+                    jenisKelamin: '',
+                    agama: '',
+                    alamat: '',
+                    noHP: '',
+                    asalSekolah: '',
+                    namaAyah: '',
+                    pekerjaanAyah: '',
+                    namaIbu: '',
+                    pekerjaanIbu: '',
+                    noHPOrtu: ''
+                });
+                setShowForm(false);
+            };
+
+            const handleChange = (e) => {
+                setFormData({
+                    ...formData,
+                    [e.target.name]: e.target.value
+                });
+            };
+
+            return (
+                <section id="registration" className="registration-cta">
+                    <h2>Pendaftaran Siswa Baru 2026/2027</h2>
+                    <p>Bergabunglah dengan keluarga besar SMA Al-Fiil dan raih masa depan gemilang!</p>
+                    
+                    {!showForm ? (
+                        <button 
+                            onClick={() => setShowForm(true)}
+                            className="btn" 
+                            style={{ background: 'white', color: 'var(--accent)', marginTop: '1rem' }}
+                        >
+                            📝 Daftar Sekarang
+                        </button>
+                    ) : (
+                        <div style={{ 
+                            maxWidth: '800px', 
+                            margin: '2rem auto 0',
+                            background: 'white',
+                            padding: '2.5rem',
+                            borderRadius: '16px',
+                            textAlign: 'left'
+                        }}>
+                            <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+                                <h3 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>
+                                    Formulir Pendaftaran Siswa Baru
+                                </h3>
+                                <p style={{ color: 'var(--text-light)' }}>
+                                    Isi data dengan lengkap dan benar
+                                </p>
+                            </div>
+
+                            <form onSubmit={handleSubmit}>
+                                <div style={{ 
+                                    background: 'var(--light)', 
+                                    padding: '1.5rem', 
+                                    borderRadius: '8px',
+                                    marginBottom: '1.5rem'
+                                }}>
+                                    <h4 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>
+                                        📋 Data Pribadi Siswa
+                                    </h4>
+
+                                    <div className="form-group">
+                                        <label>Nama Lengkap <span style={{ color: 'red' }}>*</span></label>
+                                        <input 
+                                            type="text"
+                                            name="namaLengkap"
+                                            value={formData.namaLengkap}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="Sesuai Ijazah SMP"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>NISN <span style={{ color: 'red' }}>*</span></label>
+                                        <input 
+                                            type="text"
+                                            name="nisn"
+                                            value={formData.nisn}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="10 digit NISN"
+                                            pattern="[0-9]{10}"
+                                        />
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group">
+                                            <label>Tempat Lahir <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="text"
+                                                name="tempatLahir"
+                                                value={formData.tempatLahir}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="Kota/Kabupaten"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Tanggal Lahir <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="date"
+                                                name="tanggalLahir"
+                                                value={formData.tanggalLahir}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group">
+                                            <label>Jenis Kelamin <span style={{ color: 'red' }}>*</span></label>
+                                            <select 
+                                                name="jenisKelamin"
+                                                value={formData.jenisKelamin}
+                                                onChange={handleChange}
+                                                required
+                                                style={{ 
+                                                    width: '100%', 
+                                                    padding: '0.9rem 1.2rem',
+                                                    border: '2px solid var(--border)',
+                                                    borderRadius: '8px',
+                                                    fontSize: '1rem'
+                                                }}
+                                            >
+                                                <option value="">Pilih</option>
+                                                <option value="Laki-laki">Laki-laki</option>
+                                                <option value="Perempuan">Perempuan</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Agama <span style={{ color: 'red' }}>*</span></label>
+                                            <select 
+                                                name="agama"
+                                                value={formData.agama}
+                                                onChange={handleChange}
+                                                required
+                                                style={{ 
+                                                    width: '100%', 
+                                                    padding: '0.9rem 1.2rem',
+                                                    border: '2px solid var(--border)',
+                                                    borderRadius: '8px',
+                                                    fontSize: '1rem'
+                                                }}
+                                            >
+                                                <option value="">Pilih</option>
+                                                <option value="Islam">Islam</option>
+                                                <option value="Kristen">Kristen</option>
+                                                <option value="Katolik">Katolik</option>
+                                                <option value="Hindu">Hindu</option>
+                                                <option value="Buddha">Buddha</option>
+                                                <option value="Konghucu">Konghucu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Alamat Lengkap <span style={{ color: 'red' }}>*</span></label>
+                                        <textarea 
+                                            name="alamat"
+                                            value={formData.alamat}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"
+                                            rows="3"
+                                        ></textarea>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group">
+                                            <label>No. HP Siswa <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="tel"
+                                                name="noHP"
+                                                value={formData.noHP}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="08xxxxxxxxxx"
+                                                pattern="[0-9]{10,13}"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Asal Sekolah (SMP) <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="text"
+                                                name="asalSekolah"
+                                                value={formData.asalSekolah}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="Nama SMP/MTs"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style={{ 
+                                    background: 'var(--light)', 
+                                    padding: '1.5rem', 
+                                    borderRadius: '8px',
+                                    marginBottom: '1.5rem'
+                                }}>
+                                    <h4 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>
+                                        👨‍👩‍👦 Data Orang Tua/Wali
+                                    </h4>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group">
+                                            <label>Nama Ayah <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="text"
+                                                name="namaAyah"
+                                                value={formData.namaAyah}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="Nama lengkap ayah"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Pekerjaan Ayah <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="text"
+                                                name="pekerjaanAyah"
+                                                value={formData.pekerjaanAyah}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="Pekerjaan ayah"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                        <div className="form-group">
+                                            <label>Nama Ibu <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="text"
+                                                name="namaIbu"
+                                                value={formData.namaIbu}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="Nama lengkap ibu"
+                                            />
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Pekerjaan Ibu <span style={{ color: 'red' }}>*</span></label>
+                                            <input 
+                                                type="text"
+                                                name="pekerjaanIbu"
+                                                value={formData.pekerjaanIbu}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="Pekerjaan ibu"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>No. HP Orang Tua <span style={{ color: 'red' }}>*</span></label>
+                                        <input 
+                                            type="tel"
+                                            name="noHPOrtu"
+                                            value={formData.noHPOrtu}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="08xxxxxxxxxx"
+                                            pattern="[0-9]{10,13}"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                                    <button 
+                                        type="button"
+                                        onClick={() => setShowForm(false)}
+                                        className="btn-outline"
+                                    >
+                                        ← Batal
+                                    </button>
+                                    <button type="submit" className="btn">
+                                        ✉️ Kirim Pendaftaran
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+                </section>
+            );
+        }
+
+        // Contact Section
+        function ContactSection() {
+            const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const waMessage = `Halo SMA Al-Fiil,%0A%0ANama: ${formData.name}%0AEmail: ${formData.email}%0APesan: ${formData.message}`;
+                window.open(`https://wa.me/6285659627944?text=${waMessage}`, '_blank');
+                setFormData({ name: '', email: '', message: '' });
+            };
+
+            return (
+                <section id="contact" className="section" style={{ background: 'var(--light)' }}>
+                    <div className="section-header">
+                        <h2>Hubungi Kami</h2>
+                        <p>Kami siap membantu Anda dengan informasi yang dibutuhkan</p>
+                    </div>
+
+                    <div className="contact-container">
+                        <div className="contact-info">
+                            <div className="contact-item">
+                                <div className="contact-icon">📍</div>
+                                <div className="contact-details">
+                                    <h4>Alamat</h4>
+                                    <p>Jln. Gajah Eretan No. 19<br/>Gajah Mekar - Kutawaringin<br/>Kab. Bandung</p>
+                                </div>
+                            </div>
+
+                            <div className="contact-item">
+                                <div className="contact-icon">📧</div>
+                                <div className="contact-details">
+                                    <h4>Email</h4>
+                                    <p><a href="mailto:smaalfiil15@gmail.com">smaalfiil15@gmail.com</a></p>
+                                </div>
+                            </div>
+
+                            <div className="contact-item">
+                                <div className="contact-icon">📱</div>
+                                <div className="contact-details">
+                                    <h4>WhatsApp</h4>
+                                    <p><a href="https://wa.me/6285659627944" target="_blank">0856-5962-7944</a></p>
+                                </div>
+                            </div>
+
+                            <div className="contact-item">
+                                <div className="contact-icon">🌐</div>
+                                <div className="contact-details">
+                                    <h4>Media Sosial</h4>
+                                    <div className="social-links">
+                                        <a href="https://instagram.com/smaalfiil" target="_blank" className="social-btn instagram" title="Instagram">📷</a>
+                                        <a href="https://tiktok.com/@smaalfiil" target="_blank" className="social-btn tiktok" title="TikTok">🎵</a>
+                                        <a href="https://youtube.com/@smaalfiil" target="_blank" className="social-btn youtube" title="YouTube">▶️</a>
+                                        <a href="https://wa.me/6285659627944" target="_blank" className="social-btn whatsapp" title="WhatsApp">💬</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="contact-form">
+                            <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)', fontFamily: 'Poppins, sans-serif' }}>Kirim Pesan</h3>
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <label>Nama Lengkap</label>
+                                    <input 
+                                        type="text" 
+                                        required
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Email</label>
+                                    <input 
+                                        type="email" 
+                                        required
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Pesan</label>
+                                    <textarea 
+                                        required
+                                        value={formData.message}
+                                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                                    ></textarea>
+                                </div>
+                                <button type="submit" className="btn">Kirim Pesan via WhatsApp</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Footer
+        function Footer({ scrollToSection }) {
+            return (
+                <footer className="footer">
+                    <div className="footer-content">
+                        <div className="footer-section">
+                            <h3>SMA AL-FIIL</h3>
+                            <p>Lembaga pendidikan menengah atas yang berkomitmen membentuk generasi tangguh, mandiri, dan siap mengabdi berdasarkan iman dan taqwa.</p>
+                            <p style={{ marginTop: '1rem', fontSize: '0.9rem' }}>
+                                <strong>Berdiri sejak: 3 Mei 2006</strong>
+                            </p>
+                        </div>
+
+                        <div className="footer-section">
+                            <h3>Tautan Cepat</h3>
+                            <ul>
+                                <li><a href="#profile" onClick={() => scrollToSection('profile')}>Profil Sekolah</a></li>
+                                <li><a href="#facilities" onClick={() => scrollToSection('facilities')}>Fasilitas</a></li>
+                                <li><a href="#news" onClick={() => scrollToSection('news')}>Berita</a></li>
+                                <li><a href="#gallery" onClick={() => scrollToSection('gallery')}>Galeri</a></li>
+                                <li><a href="#contact" onClick={() => scrollToSection('contact')}>Kontak</a></li>
+                            </ul>
+                        </div>
+
+                        <div className="footer-section">
+                            <h3>Kontak</h3>
+                            <p>📍 Jln. Gajah Eretan No. 19<br/>Gajah Mekar - Kutawaringin<br/>Kab. Bandung</p>
+                            <p>📧 smaalfiil15@gmail.com</p>
+                            <p>📱 0856-5962-7944</p>
+                        </div>
+                    </div>
+
+                    <div className="footer-bottom">
+                        <p>&copy; 2026 SMA AL-FIIL. All rights reserved. | Dibuat dengan ❤️ untuk pendidikan berkualitas</p>
+                    </div>
+                </footer>
+            );
+        }
+
+        // Admin Panel Component
+        function AdminPanel({ showAdmin, setShowAdmin, news, setNews, gallery, setGallery, logoUrl, setLogoUrl, heroBackground, setHeroBackground, ekstrakurikuler, setEkstrakurikuler, adminPassword, setAdminPassword, registrations, setRegistrations }) {
+            const [activeTab, setActiveTab] = useState('news');
+            const [newItem, setNewItem] = useState({ title: '', content: '', date: '', icon: '' });
+            const [password, setPassword] = useState('');
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                if (password === adminPassword) {
+                    setIsAuthenticated(true);
+                } else {
+                    alert('Password salah!');
+                }
+            };
+
+            const handleLogoUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('Ukuran file terlalu besar! Maksimal 2MB');
+                        return;
+                    }
+                    if (!file.type.startsWith('image/')) {
+                        alert('File harus berupa gambar!');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setLogoUrl(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const removeLogo = () => {
+                if (confirm('Hapus logo dan kembali ke logo default?')) {
+                    setLogoUrl('');
+                }
+            };
+
+            const handleBackgroundUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('Ukuran file terlalu besar! Maksimal 5MB');
+                        return;
+                    }
+                    if (!file.type.startsWith('image/')) {
+                        alert('File harus berupa gambar!');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setHeroBackground(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const removeBackground = () => {
+                if (confirm('Hapus background dan kembali ke background default?')) {
+                    setHeroBackground('');
+                }
+            };
+
+            const addNews = () => {
+                if (!newItem.title || !newItem.content || !newItem.date || !newItem.icon) {
+                    alert('Semua field harus diisi!');
+                    return;
+                }
+                setNews([...news, { ...newItem, id: Date.now() }]);
+                setNewItem({ title: '', content: '', date: '', icon: '' });
+            };
+
+            const deleteNews = (id) => {
+                if (confirm('Hapus berita ini?')) {
+                    setNews(news.filter(item => item.id !== id));
+                }
+            };
+
+            const addGallery = () => {
+                if (!newItem.title || !newItem.description || !newItem.icon) {
+                    alert('Semua field harus diisi!');
+                    return;
+                }
+                setGallery([...gallery, { ...newItem, id: Date.now() }]);
+                setNewItem({ title: '', description: '', icon: '' });
+            };
+
+            const deleteGallery = (id) => {
+                if (confirm('Hapus item galeri ini?')) {
+                    setGallery(gallery.filter(item => item.id !== id));
+                }
+            };
+
+            const addEkstrakurikuler = () => {
+                if (!newItem.name || !newItem.icon) {
+                    alert('Nama dan icon harus diisi!');
+                    return;
+                }
+                setEkstrakurikuler([...ekstrakurikuler, { ...newItem, id: Date.now(), photo: newItem.photo || '' }]);
+                setNewItem({ name: '', icon: '', photo: '' });
+            };
+
+            const deleteEkstrakurikuler = (id) => {
+                if (confirm('Hapus ekstrakurikuler ini?')) {
+                    setEkstrakurikuler(ekstrakurikuler.filter(item => item.id !== id));
+                }
+            };
+
+            const handleEkskulPhotoUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 3 * 1024 * 1024) {
+                        alert('Ukuran file terlalu besar! Maksimal 3MB');
+                        return;
+                    }
+                    if (!file.type.startsWith('image/')) {
+                        alert('File harus berupa gambar!');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setNewItem({...newItem, photo: reader.result});
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const updateEkskulPhoto = (id, e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 3 * 1024 * 1024) {
+                        alert('Ukuran file terlalu besar! Maksimal 3MB');
+                        return;
+                    }
+                    if (!file.type.startsWith('image/')) {
+                        alert('File harus berupa gambar!');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const updated = ekstrakurikuler.map(item => 
+                            item.id === id ? {...item, photo: reader.result} : item
+                        );
+                        setEkstrakurikuler(updated);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const removeEkskulPhoto = (id) => {
+                if (confirm('Hapus foto ekstrakurikuler ini?')) {
+                    const updated = ekstrakurikuler.map(item => 
+                        item.id === id ? {...item, photo: ''} : item
+                    );
+                    setEkstrakurikuler(updated);
+                }
+            };
+
+            if (!showAdmin) {
+                return (
+                    <div className="admin-panel">
+                        <button className="admin-toggle" onClick={() => setShowAdmin(true)} title="Panel Admin">
+                            ⚙️
+                        </button>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="admin-modal" onClick={(e) => e.target.className === 'admin-modal' && setShowAdmin(false)}>
+                    <div className="admin-content">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                            <h2 style={{ fontFamily: 'Playfair Display, serif', color: 'var(--primary)' }}>Panel Admin</h2>
+                            <button onClick={() => { setShowAdmin(false); setIsAuthenticated(false); }} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>✕</button>
+                        </div>
+
+                        {!isAuthenticated ? (
+                            <form onSubmit={handleLogin}>
+                                <div className="form-group">
+                                    <label>Password Admin</label>
+                                    <input 
+                                        type="password" 
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Masukkan password"
+                                    />
+                                </div>
+                                <button type="submit" className="btn">Login</button>
+                                <p style={{ marginTop: '1rem', color: 'var(--text-light)', fontSize: '0.9rem' }}>
+                                    Password default: admin123
+                                </p>
+                            </form>
+                        ) : (
+                            <>
+                                <div className="admin-tabs">
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'logo' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('logo')}
+                                    >
+                                        Logo
+                                    </button>
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'background' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('background')}
+                                    >
+                                        Background
+                                    </button>
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'news' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('news')}
+                                    >
+                                        Berita
+                                    </button>
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'gallery' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('gallery')}
+                                    >
+                                        Galeri
+                                    </button>
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'ekskul' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('ekskul')}
+                                    >
+                                        Ekstrakurikuler
+                                    </button>
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'registrations' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('registrations')}
+                                    >
+                                        Pendaftaran
+                                    </button>
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'settings' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('settings')}
+                                    >
+                                        Pengaturan
+                                    </button>
+                                    <button 
+                                        className={`admin-tab ${activeTab === 'guide' ? 'active' : ''}`}
+                                        onClick={() => setActiveTab('guide')}
+                                    >
+                                        Panduan
+                                    </button>
+                                </div>
+
+                                {activeTab === 'logo' && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Upload Logo Sekolah</h3>
+                                        
+                                        <div style={{ background: 'var(--light)', padding: '2rem', borderRadius: '12px', textAlign: 'center' }}>
+                                            {logoUrl ? (
+                                                <div>
+                                                    <div style={{ marginBottom: '1.5rem' }}>
+                                                        <img 
+                                                            src={logoUrl} 
+                                                            alt="Logo Preview" 
+                                                            style={{ 
+                                                                maxWidth: '200px', 
+                                                                maxHeight: '200px',
+                                                                border: '3px solid var(--primary)',
+                                                                borderRadius: '12px',
+                                                                boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                                                            }} 
+                                                        />
+                                                    </div>
+                                                    <p style={{ color: 'var(--secondary)', marginBottom: '1rem', fontWeight: 600 }}>
+                                                        ✓ Logo berhasil diupload
+                                                    </p>
+                                                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                                                        <label className="btn">
+                                                            Ganti Logo
+                                                            <input 
+                                                                type="file" 
+                                                                accept="image/*"
+                                                                onChange={handleLogoUpload}
+                                                                style={{ display: 'none' }}
+                                                            />
+                                                        </label>
+                                                        <button onClick={removeLogo} className="btn-outline">
+                                                            Hapus Logo
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <div style={{ 
+                                                        width: '150px', 
+                                                        height: '150px', 
+                                                        margin: '0 auto 1.5rem',
+                                                        background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                                                        borderRadius: '12px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        color: 'white',
+                                                        fontSize: '4rem',
+                                                        fontFamily: 'Playfair Display, serif',
+                                                        fontWeight: 900
+                                                    }}>
+                                                        AF
+                                                    </div>
+                                                    <p style={{ marginBottom: '1.5rem', color: 'var(--text-light)' }}>
+                                                        Logo default sedang digunakan
+                                                    </p>
+                                                    <label className="btn">
+                                                        Upload Logo Sekolah
+                                                        <input 
+                                                            type="file" 
+                                                            accept="image/*"
+                                                            onChange={handleLogoUpload}
+                                                            style={{ display: 'none' }}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                            
+                                            <div style={{ 
+                                                marginTop: '2rem', 
+                                                padding: '1.5rem', 
+                                                background: 'white', 
+                                                borderRadius: '8px',
+                                                textAlign: 'left'
+                                            }}>
+                                                <h4 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>
+                                                    📝 Persyaratan Logo:
+                                                </h4>
+                                                <ul style={{ 
+                                                    listStyle: 'none', 
+                                                    padding: 0,
+                                                    color: 'var(--text)'
+                                                }}>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Format: JPG, PNG, atau SVG</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Ukuran maksimal: 2MB</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Rekomendasi: Persegi (1:1 ratio)</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Resolusi minimal: 300x300px</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Background: Transparan lebih baik</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'background' && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Upload Background Hero Section</h3>
+                                        
+                                        <div style={{ background: 'var(--light)', padding: '2rem', borderRadius: '12px', textAlign: 'center' }}>
+                                            {heroBackground ? (
+                                                <div>
+                                                    <div style={{ marginBottom: '1.5rem' }}>
+                                                        <div style={{
+                                                            width: '100%',
+                                                            height: '200px',
+                                                            backgroundImage: `url(${heroBackground})`,
+                                                            backgroundSize: 'cover',
+                                                            backgroundPosition: 'center',
+                                                            border: '3px solid var(--primary)',
+                                                            borderRadius: '12px',
+                                                            boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                                                            position: 'relative'
+                                                        }}>
+                                                            <div style={{
+                                                                position: 'absolute',
+                                                                top: 0,
+                                                                left: 0,
+                                                                right: 0,
+                                                                bottom: 0,
+                                                                background: 'rgba(30, 81, 40, 0.85)',
+                                                                borderRadius: '9px',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                color: 'white',
+                                                                fontSize: '1.2rem',
+                                                                fontWeight: 'bold'
+                                                            }}>
+                                                                Preview dengan Overlay Hijau
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p style={{ color: 'var(--secondary)', marginBottom: '1rem', fontWeight: 600 }}>
+                                                        ✓ Background berhasil diupload
+                                                    </p>
+                                                    <p style={{ color: 'var(--text-light)', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                                                        Background akan ditampilkan dengan overlay hijau transparan untuk keterbacaan teks
+                                                    </p>
+                                                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                                                        <label className="btn">
+                                                            Ganti Background
+                                                            <input 
+                                                                type="file" 
+                                                                accept="image/*"
+                                                                onChange={handleBackgroundUpload}
+                                                                style={{ display: 'none' }}
+                                                            />
+                                                        </label>
+                                                        <button onClick={removeBackground} className="btn-outline">
+                                                            Hapus Background
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <div style={{ 
+                                                        width: '100%', 
+                                                        height: '200px', 
+                                                        margin: '0 auto 1.5rem',
+                                                        background: 'linear-gradient(135deg, #1e5128 0%, #2d6a3e 50%, #4e9f3d 100%)',
+                                                        borderRadius: '12px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        color: 'white',
+                                                        fontSize: '1.2rem',
+                                                        fontWeight: 'bold'
+                                                    }}>
+                                                        Background Gradient Default
+                                                    </div>
+                                                    <p style={{ marginBottom: '1.5rem', color: 'var(--text-light)' }}>
+                                                        Background gradient hijau sedang digunakan
+                                                    </p>
+                                                    <label className="btn">
+                                                        Upload Background Sekolah
+                                                        <input 
+                                                            type="file" 
+                                                            accept="image/*"
+                                                            onChange={handleBackgroundUpload}
+                                                            style={{ display: 'none' }}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            )}
+                                            
+                                            <div style={{ 
+                                                marginTop: '2rem', 
+                                                padding: '1.5rem', 
+                                                background: 'white', 
+                                                borderRadius: '8px',
+                                                textAlign: 'left'
+                                            }}>
+                                                <h4 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>
+                                                    📝 Persyaratan Background:
+                                                </h4>
+                                                <ul style={{ 
+                                                    listStyle: 'none', 
+                                                    padding: 0,
+                                                    color: 'var(--text)'
+                                                }}>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Format: JPG atau PNG</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Ukuran maksimal: 5MB</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Rekomendasi: Landscape (16:9 ratio)</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Resolusi minimal: 1920x1080px</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>✓ Foto gedung sekolah, halaman, atau suasana sekolah</li>
+                                                    <li style={{ padding: '0.5rem 0' }}>⚠️ Background akan otomatis diberi overlay hijau gelap</li>
+                                                </ul>
+                                            </div>
+
+                                            <div style={{ 
+                                                marginTop: '1rem', 
+                                                padding: '1rem', 
+                                                background: '#fffbea', 
+                                                borderRadius: '8px',
+                                                textAlign: 'left',
+                                                border: '2px solid var(--accent)'
+                                            }}>
+                                                <h4 style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>
+                                                    💡 Tips Foto Background:
+                                                </h4>
+                                                <ul style={{ 
+                                                    listStyle: 'none', 
+                                                    padding: 0,
+                                                    color: 'var(--text)',
+                                                    fontSize: '0.9rem'
+                                                }}>
+                                                    <li style={{ padding: '0.3rem 0' }}>• Gunakan foto gedung sekolah dari depan</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>• Foto halaman sekolah saat upacara</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>• Foto suasana kegiatan belajar mengajar</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>• Pastikan foto terang dan fokus</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>• Hindari foto yang terlalu ramai/sibuk</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'news' && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>Tambah Berita Baru</h3>
+                                        <div className="form-group">
+                                            <label>Judul Berita</label>
+                                            <input 
+                                                type="text"
+                                                value={newItem.title}
+                                                onChange={(e) => setNewItem({...newItem, title: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Tanggal</label>
+                                            <input 
+                                                type="text"
+                                                value={newItem.date}
+                                                onChange={(e) => setNewItem({...newItem, date: e.target.value})}
+                                                placeholder="Contoh: 10 Februari 2026"
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Icon Emoji</label>
+                                            <input 
+                                                type="text"
+                                                value={newItem.icon}
+                                                onChange={(e) => setNewItem({...newItem, icon: e.target.value})}
+                                                placeholder="Contoh: 📚 atau 🏆"
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Isi Berita</label>
+                                            <textarea 
+                                                value={newItem.content}
+                                                onChange={(e) => setNewItem({...newItem, content: e.target.value})}
+                                            ></textarea>
+                                        </div>
+                                        <button className="btn" onClick={addNews}>Tambah Berita</button>
+
+                                        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', color: 'var(--primary)' }}>Daftar Berita</h3>
+                                        {news.map(item => (
+                                            <div key={item.id} style={{ 
+                                                padding: '1rem', 
+                                                background: 'var(--light)', 
+                                                borderRadius: '8px', 
+                                                marginBottom: '1rem',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}>
+                                                <div>
+                                                    <h4 style={{ color: 'var(--primary)' }}>{item.icon} {item.title}</h4>
+                                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>{item.date}</p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => deleteNews(item.id)}
+                                                    className="btn-outline"
+                                                    style={{ padding: '0.5rem 1rem' }}
+                                                >
+                                                    Hapus
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {activeTab === 'gallery' && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>Tambah Item Galeri</h3>
+                                        <div className="form-group">
+                                            <label>Judul</label>
+                                            <input 
+                                                type="text"
+                                                value={newItem.title}
+                                                onChange={(e) => setNewItem({...newItem, title: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Deskripsi</label>
+                                            <input 
+                                                type="text"
+                                                value={newItem.description}
+                                                onChange={(e) => setNewItem({...newItem, description: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Icon Emoji</label>
+                                            <input 
+                                                type="text"
+                                                value={newItem.icon}
+                                                onChange={(e) => setNewItem({...newItem, icon: e.target.value})}
+                                                placeholder="Contoh: 📚 atau 🏆"
+                                            />
+                                        </div>
+                                        <button className="btn" onClick={addGallery}>Tambah ke Galeri</button>
+
+                                        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', color: 'var(--primary)' }}>Daftar Galeri</h3>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                                            {gallery.map(item => (
+                                                <div key={item.id} style={{ 
+                                                    padding: '1rem', 
+                                                    background: 'var(--light)', 
+                                                    borderRadius: '8px',
+                                                    textAlign: 'center'
+                                                }}>
+                                                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{item.icon}</div>
+                                                    <h4 style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>{item.title}</h4>
+                                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-light)', marginBottom: '0.5rem' }}>{item.description}</p>
+                                                    <button 
+                                                        onClick={() => deleteGallery(item.id)}
+                                                        className="btn-outline"
+                                                        style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'ekskul' && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>Kelola Ekstrakurikuler</h3>
+                                        
+                                        <div style={{ background: 'var(--light)', padding: '2rem', borderRadius: '12px', marginBottom: '2rem' }}>
+                                            <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>Tambah Ekstrakurikuler Baru</h4>
+                                            
+                                            <div className="form-group">
+                                                <label>Nama Ekstrakurikuler</label>
+                                                <input 
+                                                    type="text"
+                                                    value={newItem.name || ''}
+                                                    onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                                                    placeholder="Contoh: Paskibra, Basket, English Club"
+                                                />
+                                            </div>
+                                            
+                                            <div className="form-group">
+                                                <label>Icon Emoji</label>
+                                                <input 
+                                                    type="text"
+                                                    value={newItem.icon || ''}
+                                                    onChange={(e) => setNewItem({...newItem, icon: e.target.value})}
+                                                    placeholder="Contoh: ⚽ 🏀 🎵 🎭"
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label>Foto Kegiatan (Opsional)</label>
+                                                {newItem.photo ? (
+                                                    <div>
+                                                        <div style={{ 
+                                                            marginBottom: '1rem',
+                                                            position: 'relative',
+                                                            maxWidth: '300px'
+                                                        }}>
+                                                            <img 
+                                                                src={newItem.photo} 
+                                                                alt="Preview" 
+                                                                style={{ 
+                                                                    width: '100%', 
+                                                                    height: '150px',
+                                                                    objectFit: 'cover',
+                                                                    borderRadius: '8px',
+                                                                    border: '2px solid var(--border)'
+                                                                }} 
+                                                            />
+                                                        </div>
+                                                        <button 
+                                                            onClick={() => setNewItem({...newItem, photo: ''})}
+                                                            className="btn-outline"
+                                                            style={{ padding: '0.5rem 1rem' }}
+                                                        >
+                                                            Hapus Foto
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <label className="btn-outline" style={{ display: 'inline-block', cursor: 'pointer' }}>
+                                                        📷 Pilih Foto
+                                                        <input 
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={handleEkskulPhotoUpload}
+                                                            style={{ display: 'none' }}
+                                                        />
+                                                    </label>
+                                                )}
+                                                <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
+                                                    JPG/PNG, max 3MB. Jika tidak diisi, akan tampil icon emoji.
+                                                </p>
+                                            </div>
+                                            
+                                            <button className="btn" onClick={addEkstrakurikuler}>
+                                                Tambah Ekstrakurikuler
+                                            </button>
+                                        </div>
+
+                                        <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', marginBottom: '1.5rem' }}>
+                                            <h4 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>💡 Emoji Ekstrakurikuler</h4>
+                                            <div style={{ fontSize: '0.9rem', color: 'var(--text)', lineHeight: '1.8' }}>
+                                                <p><strong>Olahraga:</strong> ⚽ 🏀 🏐 🏸 🏃 ⛹️ 🥋 🎾 ⚾</p>
+                                                <p><strong>Seni:</strong> 🎵 🎸 🎹 🎤 🎭 💃 🎨 🖌️ 📸</p>
+                                                <p><strong>Akademik:</strong> 📚 🔬 🧪 💻 🤖 🗣️ ✍️ 📖</p>
+                                                <p><strong>Organisasi:</strong> 🎖️ 🏕️ 👥 📰 📺 🎬 🎪</p>
+                                                <p><strong>Keagamaan:</strong> 🕌 📿 🤲 ☪️</p>
+                                            </div>
+                                        </div>
+
+                                        <h4 style={{ marginBottom: '1rem', color: 'var(--primary)' }}>
+                                            Daftar Ekstrakurikuler ({ekstrakurikuler.length} kegiatan)
+                                        </h4>
+                                        
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                                            {ekstrakurikuler.map(item => (
+                                                <div key={item.id} style={{ 
+                                                    background: 'white', 
+                                                    borderRadius: '12px',
+                                                    overflow: 'hidden',
+                                                    border: '2px solid var(--border)',
+                                                    transition: 'all 0.3s ease'
+                                                }}>
+                                                    <div style={{
+                                                        width: '100%',
+                                                        height: '150px',
+                                                        background: item.photo ? 'none' : 'linear-gradient(135deg, var(--accent), #e8b944)',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontSize: '3rem',
+                                                        position: 'relative',
+                                                        overflow: 'hidden'
+                                                    }}>
+                                                        {item.photo ? (
+                                                            <img 
+                                                                src={item.photo} 
+                                                                alt={item.name}
+                                                                style={{
+                                                                    width: '100%',
+                                                                    height: '100%',
+                                                                    objectFit: 'cover'
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <span>{item.icon}</span>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    <div style={{ padding: '1.5rem' }}>
+                                                        <h4 style={{ 
+                                                            color: 'var(--primary)', 
+                                                            fontSize: '1.1rem', 
+                                                            marginBottom: '1rem',
+                                                            textAlign: 'center'
+                                                        }}>
+                                                            {item.icon} {item.name}
+                                                        </h4>
+                                                        
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                                            {item.photo ? (
+                                                                <>
+                                                                    <label className="btn-outline" style={{ 
+                                                                        fontSize: '0.85rem', 
+                                                                        padding: '0.5rem',
+                                                                        textAlign: 'center',
+                                                                        cursor: 'pointer'
+                                                                    }}>
+                                                                        📷 Ganti Foto
+                                                                        <input 
+                                                                            type="file"
+                                                                            accept="image/*"
+                                                                            onChange={(e) => updateEkskulPhoto(item.id, e)}
+                                                                            style={{ display: 'none' }}
+                                                                        />
+                                                                    </label>
+                                                                    <button 
+                                                                        onClick={() => removeEkskulPhoto(item.id)}
+                                                                        className="btn-outline"
+                                                                        style={{ fontSize: '0.85rem', padding: '0.5rem' }}
+                                                                    >
+                                                                        🗑️ Hapus Foto
+                                                                    </button>
+                                                                </>
+                                                            ) : (
+                                                                <label className="btn-outline" style={{ 
+                                                                    fontSize: '0.85rem', 
+                                                                    padding: '0.5rem',
+                                                                    textAlign: 'center',
+                                                                    cursor: 'pointer'
+                                                                }}>
+                                                                    📷 Upload Foto
+                                                                    <input 
+                                                                        type="file"
+                                                                        accept="image/*"
+                                                                        onChange={(e) => updateEkskulPhoto(item.id, e)}
+                                                                        style={{ display: 'none' }}
+                                                                    />
+                                                                </label>
+                                                            )}
+                                                            <button 
+                                                                onClick={() => deleteEkstrakurikuler(item.id)}
+                                                                className="btn-outline"
+                                                                style={{ 
+                                                                    fontSize: '0.85rem', 
+                                                                    padding: '0.5rem',
+                                                                    borderColor: '#e74c3c',
+                                                                    color: '#e74c3c'
+                                                                }}
+                                                            >
+                                                                ❌ Hapus Ekskul
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {ekstrakurikuler.length === 0 && (
+                                            <div style={{ 
+                                                textAlign: 'center', 
+                                                padding: '3rem', 
+                                                background: 'var(--light)', 
+                                                borderRadius: '12px',
+                                                color: 'var(--text-light)'
+                                            }}>
+                                                <p style={{ fontSize: '3rem', marginBottom: '1rem' }}>📋</p>
+                                                <p>Belum ada ekstrakurikuler. Tambahkan yang pertama!</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {activeTab === 'registrations' && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Daftar Pendaftaran Siswa Baru</h3>
+                                        
+                                        {registrations.length === 0 ? (
+                                            <div style={{ 
+                                                textAlign: 'center', 
+                                                padding: '3rem', 
+                                                background: 'var(--light)', 
+                                                borderRadius: '12px',
+                                                color: 'var(--text-light)'
+                                            }}>
+                                                <p style={{ fontSize: '3rem', marginBottom: '1rem' }}>📋</p>
+                                                <p>Belum ada pendaftaran masuk</p>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <div style={{ 
+                                                    background: 'var(--light)', 
+                                                    padding: '1rem', 
+                                                    borderRadius: '8px',
+                                                    marginBottom: '1rem',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <p style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
+                                                        Total Pendaftar: {registrations.length} siswa
+                                                    </p>
+                                                    <button 
+                                                        onClick={() => {
+                                                            const csv = [
+                                                                ['No', 'Tanggal', 'Nama Lengkap', 'NISN', 'Tempat Lahir', 'Tanggal Lahir', 'Jenis Kelamin', 'Agama', 'Alamat', 'No HP', 'Asal Sekolah', 'Nama Ayah', 'Pekerjaan Ayah', 'Nama Ibu', 'Pekerjaan Ibu', 'No HP Ortu'],
+                                                                ...registrations.map((reg, idx) => [
+                                                                    idx + 1,
+                                                                    reg.timestamp,
+                                                                    reg.namaLengkap,
+                                                                    reg.nisn,
+                                                                    reg.tempatLahir,
+                                                                    reg.tanggalLahir,
+                                                                    reg.jenisKelamin,
+                                                                    reg.agama,
+                                                                    reg.alamat,
+                                                                    reg.noHP,
+                                                                    reg.asalSekolah,
+                                                                    reg.namaAyah,
+                                                                    reg.pekerjaanAyah,
+                                                                    reg.namaIbu,
+                                                                    reg.pekerjaanIbu,
+                                                                    reg.noHPOrtu
+                                                                ])
+                                                            ].map(row => row.join(',')).join('\n');
+                                                            const blob = new Blob([csv], { type: 'text/csv' });
+                                                            const url = URL.createObjectURL(blob);
+                                                            const a = document.createElement('a');
+                                                            a.href = url;
+                                                            a.download = `pendaftaran-sma-alfiil-${new Date().toISOString().split('T')[0]}.csv`;
+                                                            a.click();
+                                                        }}
+                                                        className="btn"
+                                                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
+                                                    >
+                                                        📥 Export ke CSV
+                                                    </button>
+                                                </div>
+
+                                                <div style={{ overflowX: 'auto' }}>
+                                                    <table style={{ 
+                                                        width: '100%', 
+                                                        borderCollapse: 'collapse',
+                                                        background: 'white',
+                                                        borderRadius: '8px',
+                                                        overflow: 'hidden'
+                                                    }}>
+                                                        <thead>
+                                                            <tr style={{ background: 'var(--primary)', color: 'white' }}>
+                                                                <th style={{ padding: '1rem', textAlign: 'left' }}>No</th>
+                                                                <th style={{ padding: '1rem', textAlign: 'left' }}>Tanggal</th>
+                                                                <th style={{ padding: '1rem', textAlign: 'left' }}>Nama Lengkap</th>
+                                                                <th style={{ padding: '1rem', textAlign: 'left' }}>NISN</th>
+                                                                <th style={{ padding: '1rem', textAlign: 'left' }}>Jenis Kelamin</th>
+                                                                <th style={{ padding: '1rem', textAlign: 'left' }}>Asal Sekolah</th>
+                                                                <th style={{ padding: '1rem', textAlign: 'left' }}>No HP</th>
+                                                                <th style={{ padding: '1rem', textAlign: 'center' }}>Aksi</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {registrations.map((reg, index) => (
+                                                                <tr key={reg.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                                                                    <td style={{ padding: '1rem' }}>{index + 1}</td>
+                                                                    <td style={{ padding: '1rem' }}>{reg.timestamp}</td>
+                                                                    <td style={{ padding: '1rem', fontWeight: 'bold' }}>{reg.namaLengkap}</td>
+                                                                    <td style={{ padding: '1rem' }}>{reg.nisn}</td>
+                                                                    <td style={{ padding: '1rem' }}>{reg.jenisKelamin}</td>
+                                                                    <td style={{ padding: '1rem' }}>{reg.asalSekolah}</td>
+                                                                    <td style={{ padding: '1rem' }}>{reg.noHP}</td>
+                                                                    <td style={{ padding: '1rem', textAlign: 'center' }}>
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                if (confirm('Detail pendaftaran:\n\n' + 
+                                                                                    `Nama: ${reg.namaLengkap}\n` +
+                                                                                    `NISN: ${reg.nisn}\n` +
+                                                                                    `TTL: ${reg.tempatLahir}, ${reg.tanggalLahir}\n` +
+                                                                                    `Jenis Kelamin: ${reg.jenisKelamin}\n` +
+                                                                                    `Agama: ${reg.agama}\n` +
+                                                                                    `Alamat: ${reg.alamat}\n` +
+                                                                                    `No HP: ${reg.noHP}\n` +
+                                                                                    `Asal Sekolah: ${reg.asalSekolah}\n` +
+                                                                                    `Ayah: ${reg.namaAyah} (${reg.pekerjaanAyah})\n` +
+                                                                                    `Ibu: ${reg.namaIbu} (${reg.pekerjaanIbu})\n` +
+                                                                                    `No HP Ortu: ${reg.noHPOrtu}\n\n` +
+                                                                                    'Hapus pendaftaran ini?'
+                                                                                )) {
+                                                                                    setRegistrations(registrations.filter(r => r.id !== reg.id));
+                                                                                }
+                                                                            }}
+                                                                            className="btn-outline"
+                                                                            style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                                                                        >
+                                                                            👁️ Detail
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {activeTab === 'settings' && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>Pengaturan Admin</h3>
+                                        
+                                        <div style={{ background: 'var(--light)', padding: '2rem', borderRadius: '12px', marginBottom: '1.5rem' }}>
+                                            <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>🔐 Ganti Password Admin</h4>
+                                            
+                                            <div style={{ 
+                                                background: 'white', 
+                                                padding: '1.5rem', 
+                                                borderRadius: '8px',
+                                                marginBottom: '1.5rem',
+                                                border: '2px solid var(--warning)'
+                                            }}>
+                                                <p style={{ color: 'var(--warning)', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                    ⚠️ Password Saat Ini
+                                                </p>
+                                                <p style={{ fontSize: '1.2rem', fontFamily: 'monospace', fontWeight: 'bold' }}>
+                                                    {adminPassword}
+                                                </p>
+                                            </div>
+
+                                            <form onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const formData = new FormData(e.target);
+                                                const currentPass = formData.get('currentPassword');
+                                                const newPass = formData.get('newPassword');
+                                                const confirmPass = formData.get('confirmPassword');
+
+                                                if (currentPass !== adminPassword) {
+                                                    alert('Password saat ini salah!');
+                                                    return;
+                                                }
+
+                                                if (newPass.length < 6) {
+                                                    alert('Password baru minimal 6 karakter!');
+                                                    return;
+                                                }
+
+                                                if (newPass !== confirmPass) {
+                                                    alert('Password baru dan konfirmasi tidak sama!');
+                                                    return;
+                                                }
+
+                                                setAdminPassword(newPass);
+                                                alert('Password berhasil diubah!');
+                                                e.target.reset();
+                                            }}>
+                                                <div className="form-group">
+                                                    <label>Password Saat Ini</label>
+                                                    <input 
+                                                        type="password"
+                                                        name="currentPassword"
+                                                        required
+                                                        placeholder="Masukkan password saat ini"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <label>Password Baru</label>
+                                                    <input 
+                                                        type="password"
+                                                        name="newPassword"
+                                                        required
+                                                        placeholder="Minimal 6 karakter"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <label>Konfirmasi Password Baru</label>
+                                                    <input 
+                                                        type="password"
+                                                        name="confirmPassword"
+                                                        required
+                                                        placeholder="Ketik ulang password baru"
+                                                    />
+                                                </div>
+
+                                                <button type="submit" className="btn">
+                                                    🔒 Ubah Password
+                                                </button>
+                                            </form>
+
+                                            <div style={{ 
+                                                marginTop: '2rem', 
+                                                padding: '1.5rem', 
+                                                background: 'white', 
+                                                borderRadius: '8px'
+                                            }}>
+                                                <h4 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>
+                                                    💡 Tips Password Kuat
+                                                </h4>
+                                                <ul style={{ 
+                                                    listStyle: 'none', 
+                                                    padding: 0,
+                                                    color: 'var(--text)'
+                                                }}>
+                                                    <li style={{ padding: '0.3rem 0' }}>✓ Minimal 8-12 karakter</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>✓ Kombinasi huruf besar dan kecil</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>✓ Gunakan angka dan simbol (@, #, !, dll)</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>✓ Jangan gunakan kata umum atau tanggal lahir</li>
+                                                    <li style={{ padding: '0.3rem 0' }}>✓ Contoh: SmA@lFi!l2026</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div style={{ background: 'var(--light)', padding: '2rem', borderRadius: '12px' }}>
+                                            <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>📊 Integrasi Google Sheets</h4>
+                                            
+                                            <div style={{ 
+                                                background: '#e3f2fd', 
+                                                padding: '1.5rem', 
+                                                borderRadius: '8px',
+                                                marginBottom: '1.5rem',
+                                                border: '2px solid #2196f3'
+                                            }}>
+                                                <p style={{ color: '#1976d2', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                    ℹ️ Cara Setup Google Sheets
+                                                </p>
+                                                <ol style={{ marginLeft: '1.5rem', color: '#424242', lineHeight: '1.8' }}>
+                                                    <li>Buka Google Sheets, buat spreadsheet baru</li>
+                                                    <li>Extensions → Apps Script</li>
+                                                    <li>Copy script dari Panduan (bawah)</li>
+                                                    <li>Deploy → New Deployment → Web App</li>
+                                                    <li>Copy URL Web App, paste di form bawah</li>
+                                                </ol>
+                                            </div>
+
+                                            <form onSubmit={(e) => {
+                                                e.preventDefault();
+                                                const url = e.target.sheetsUrl.value;
+                                                if (url && url.startsWith('https://')) {
+                                                    localStorage.setItem('sma-alfiil-google-sheets-url', url);
+                                                    alert('URL Google Sheets berhasil disimpan!\n\nData pendaftaran baru akan otomatis masuk ke Google Sheets.');
+                                                } else {
+                                                    alert('URL tidak valid! Pastikan dimulai dengan https://');
+                                                }
+                                            }}>
+                                                <div className="form-group">
+                                                    <label>Google Sheets Web App URL</label>
+                                                    <input 
+                                                        type="url"
+                                                        name="sheetsUrl"
+                                                        defaultValue={localStorage.getItem('sma-alfiil-google-sheets-url') || ''}
+                                                        placeholder="https://script.google.com/macros/s/..."
+                                                    />
+                                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
+                                                        Paste URL Web App dari Google Apps Script
+                                                    </p>
+                                                </div>
+
+                                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                                    <button type="submit" className="btn">
+                                                        💾 Simpan URL
+                                                    </button>
+                                                    {localStorage.getItem('sma-alfiil-google-sheets-url') && (
+                                                        <button 
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (confirm('Hapus integrasi Google Sheets?')) {
+                                                                    localStorage.removeItem('sma-alfiil-google-sheets-url');
+                                                                    alert('Integrasi Google Sheets dihapus');
+                                                                    location.reload();
+                                                                }
+                                                            }}
+                                                            className="btn-outline"
+                                                        >
+                                                            🗑️ Hapus Integrasi
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </form>
+
+                                            <div style={{ 
+                                                marginTop: '2rem', 
+                                                padding: '1.5rem', 
+                                                background: 'white', 
+                                                borderRadius: '8px'
+                                            }}>
+                                                <h4 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>
+                                                    📝 Google Apps Script Code
+                                                </h4>
+                                                <p style={{ marginBottom: '1rem', color: 'var(--text-light)', fontSize: '0.9rem' }}>
+                                                    Copy code ini ke Google Apps Script:
+                                                </p>
+                                                <pre style={{ 
+                                                    background: '#263238', 
+                                                    color: '#aed581', 
+                                                    padding: '1rem', 
+                                                    borderRadius: '8px',
+                                                    overflow: 'auto',
+                                                    fontSize: '0.85rem',
+                                                    lineHeight: '1.5'
+                                                }}>
+{`function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  
+  // Header jika sheet kosong
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['Timestamp', 'Nama Lengkap', 'NISN', 'Tempat Lahir', 
+      'Tanggal Lahir', 'Jenis Kelamin', 'Agama', 'Alamat', 'No HP', 
+      'Asal Sekolah', 'Nama Ayah', 'Pekerjaan Ayah', 'Nama Ibu', 
+      'Pekerjaan Ibu', 'No HP Ortu']);
+  }
+  
+  // Tambah data
+  sheet.appendRow([
+    data.timestamp,
+    data.namaLengkap,
+    data.nisn,
+    data.tempatLahir,
+    data.tanggalLahir,
+    data.jenisKelamin,
+    data.agama,
+    data.alamat,
+    data.noHP,
+    data.asalSekolah,
+    data.namaAyah,
+    data.pekerjaanAyah,
+    data.namaIbu,
+    data.pekerjaanIbu,
+    data.noHPOrtu
+  ]);
+  
+  return ContentService.createTextOutput('Success');
+}`}
+                                                </pre>
+                                                <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                                                    Setelah paste code, klik Deploy → New Deployment → Web App → Deploy
+                                                </p>
+                                            </div>
+
+                                            <div style={{ 
+                                                marginTop: '1rem', 
+                                                padding: '1rem', 
+                                                background: '#fff3cd', 
+                                                borderRadius: '8px',
+                                                border: '2px solid #ffc107'
+                                            }}>
+                                                <p style={{ color: '#856404', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                                    ⚠️ Status Integrasi
+                                                </p>
+                                                <p style={{ color: '#856404' }}>
+                                                    {localStorage.getItem('sma-alfiil-google-sheets-url') 
+                                                        ? '✅ Terhubung - Data pendaftaran akan otomatis masuk ke Google Sheets'
+                                                        : '❌ Belum Terhubung - Data hanya tersimpan di website'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'guide' && (
+                                    <div>
+                                        <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Panduan Penggunaan Website</h3>
+                                        
+                                        <div style={{ background: 'var(--light)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <h4 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>🎨 Upload Logo Sekolah</h4>
+                                            <p><strong>Menambah Logo:</strong></p>
+                                            <p>1. Pilih tab "Logo"</p>
+                                            <p>2. Klik tombol "Upload Logo Sekolah"</p>
+                                            <p>3. Pilih file logo (JPG/PNG/SVG, max 2MB)</p>
+                                            <p>4. Logo akan langsung muncul di header</p>
+                                            <p style={{ marginTop: '0.5rem' }}><strong>Mengganti/Menghapus Logo:</strong></p>
+                                            <p>1. Tab "Logo" → Klik "Ganti Logo" atau "Hapus Logo"</p>
+                                            <p>2. Jika dihapus, akan kembali ke logo default "AF"</p>
+                                        </div>
+
+                                        <div style={{ background: 'var(--light)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <h4 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>🖼️ Upload Background Hero</h4>
+                                            <p><strong>Menambah Background:</strong></p>
+                                            <p>1. Pilih tab "Background"</p>
+                                            <p>2. Klik "Upload Background Sekolah"</p>
+                                            <p>3. Pilih foto sekolah (JPG/PNG, max 5MB)</p>
+                                            <p>4. Background akan muncul di section Hero (halaman depan)</p>
+                                            <p style={{ marginTop: '0.5rem' }}><strong>Tips Background:</strong></p>
+                                            <p>• Gunakan foto gedung/halaman sekolah</p>
+                                            <p>• Resolusi minimal 1920x1080px</p>
+                                            <p>• Background otomatis diberi overlay hijau untuk keterbacaan</p>
+                                        </div>
+
+                                        <div style={{ background: 'var(--light)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <h4 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>🔐 Login Admin</h4>
+                                            <p>1. Klik tombol ⚙️ di pojok kanan bawah</p>
+                                            <p>2. Masukkan password: <strong>admin123</strong></p>
+                                            <p>3. Klik tombol Login</p>
+                                        </div>
+
+                                        <div style={{ background: 'var(--light)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <h4 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>📰 Mengelola Berita</h4>
+                                            <p><strong>Menambah Berita:</strong></p>
+                                            <p>1. Pilih tab "Berita"</p>
+                                            <p>2. Isi form dengan judul, tanggal, icon emoji, dan isi berita</p>
+                                            <p>3. Klik "Tambah Berita"</p>
+                                            <p style={{ marginTop: '0.5rem' }}><strong>Menghapus Berita:</strong></p>
+                                            <p>1. Scroll ke bawah ke "Daftar Berita"</p>
+                                            <p>2. Klik tombol "Hapus" pada berita yang ingin dihapus</p>
+                                            <p>3. Konfirmasi penghapusan</p>
+                                        </div>
+
+                                        <div style={{ background: 'var(--light)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <h4 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>🖼️ Mengelola Galeri</h4>
+                                            <p><strong>Menambah Item Galeri:</strong></p>
+                                            <p>1. Pilih tab "Galeri"</p>
+                                            <p>2. Isi judul, deskripsi, dan icon emoji</p>
+                                            <p>3. Klik "Tambah ke Galeri"</p>
+                                            <p style={{ marginTop: '0.5rem' }}><strong>Menghapus Item Galeri:</strong></p>
+                                            <p>1. Scroll ke "Daftar Galeri"</p>
+                                            <p>2. Klik "Hapus" pada item yang ingin dihapus</p>
+                                        </div>
+
+                                        <div style={{ background: 'var(--light)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <h4 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>🎯 Mengelola Ekstrakurikuler</h4>
+                                            <p><strong>Menambah Ekstrakurikuler:</strong></p>
+                                            <p>1. Pilih tab "Ekstrakurikuler"</p>
+                                            <p>2. Isi nama ekstrakurikuler dan icon emoji</p>
+                                            <p>3. (Opsional) Upload foto kegiatan ekstrakurikuler</p>
+                                            <p>4. Klik "Tambah Ekstrakurikuler"</p>
+                                            <p style={{ marginTop: '0.5rem' }}><strong>Upload/Ganti/Hapus Foto:</strong></p>
+                                            <p>1. Pada card ekstrakurikuler di daftar</p>
+                                            <p>2. Klik "📷 Upload Foto" / "Ganti Foto" / "Hapus Foto"</p>
+                                            <p style={{ marginTop: '0.5rem' }}><strong>Menghapus Ekstrakurikuler:</strong></p>
+                                            <p>1. Klik "❌ Hapus Ekskul" pada ekstrakurikuler yang ingin dihapus</p>
+                                            <p style={{ marginTop: '0.5rem' }}><strong>Format Foto:</strong></p>
+                                            <p>• Format: JPG/PNG, max 3MB</p>
+                                            <p>• Resolusi: min 600x400px</p>
+                                            <p>• Emoji yang Cocok:</p>
+                                            <p>• Olahraga: ⚽ 🏀 🏐 🏸 🥋</p>
+                                            <p>• Seni: 🎵 🎭 💃 🎨 📸</p>
+                                            <p>• Akademik: 📚 💻 🤖 🔬</p>
+                                        </div>
+
+                                        <div style={{ background: 'var(--light)', padding: '1.5rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                                            <h4 style={{ color: 'var(--secondary)', marginBottom: '0.5rem' }}>💡 Tips Penggunaan</h4>
+                                            <p>• Gunakan emoji yang relevan untuk icon (📚 🏆 🎉 ⚽ 💻 dll)</p>
+                                            <p>• Data tersimpan otomatis di browser (localStorage)</p>
+                                            <p>• Refresh halaman untuk melihat perubahan</p>
+                                            <p>• Formulir kontak akan mengirim pesan via WhatsApp</p>
+                                            <p>• Website sudah responsive untuk mobile</p>
+                                        </div>
+
+                                        <div style={{ background: '#fffbea', padding: '1.5rem', borderRadius: '8px', border: '2px solid var(--accent)' }}>
+                                            <h4 style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>⚠️ Catatan Penting</h4>
+                                            <p>• Jangan hapus file HTML ini</p>
+                                            <p>• Data hanya tersimpan di browser lokal</p>
+                                            <p>• Backup data secara berkala</p>
+                                            <p>• Untuk mengubah konten statis (Visi, Misi, dll), edit kode HTML</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // Render App
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
