@@ -1,0 +1,3136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMA AL-FIIL - For The Brighter Future</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=Dancing+Script:wght@700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --hijau-tua: #0a1f44;
+  --hijau: #1a3a6b;
+  --hijau-muda: #1e4d8c;
+  --hijau-cerah: #2563b0;
+  --emas: #c8960c;
+  --emas-muda: #f0c040;
+  --krem: #f0f4ff;
+  --putih: #ffffff;
+  --abu: #6b7280;
+  --gelap: #0d1b2a;
+  --merah: #dc2626;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { 
+  font-family:'Crimson Pro',serif; 
+  background:var(--krem); 
+  color:var(--gelap);
+  overflow-x:hidden;
+}
+
+
+/* Modal di dalam admin panel */
+.admin-modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.8);
+  z-index:4000; display:none; align-items:center; justify-content:center;
+  padding:1rem;
+}
+.admin-modal-overlay.open { display:flex; }
+.admin-modal {
+  background:#0d1f3c; border-radius:16px;
+  max-width:600px; width:100%;
+  max-height:90vh; overflow-y:auto;
+  padding:2rem; position:relative;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.admin-modal .modal-title { color:var(--putih); }
+.admin-modal .form-label { color:rgba(255,255,255,0.8); }
+.admin-modal .form-input,
+.admin-modal .form-textarea,
+.admin-modal .form-select {
+  background:rgba(255,255,255,0.07);
+  border-color:rgba(255,255,255,0.15);
+  color:var(--putih);
+}
+.admin-modal .form-input::placeholder,
+.admin-modal .form-textarea::placeholder { color:rgba(255,255,255,0.3); }
+.admin-modal .form-input:focus,
+.admin-modal .form-textarea:focus,
+.admin-modal .form-select:focus { border-color:var(--hijau-muda); }
+.admin-modal .form-select option { background:#1e293b; color:var(--putih); }
+.admin-modal .modal-close { color:rgba(255,255,255,0.5); }
+.admin-modal .modal-close:hover { color:var(--merah); }
+.admin-modal .upload-area {
+  border-color:rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.03);
+  color:rgba(255,255,255,0.5);
+}
+.admin-modal .upload-area:hover { border-color:var(--hijau-muda); color:rgba(255,255,255,0.8); }
+.admin-modal .form-hint { color:rgba(255,255,255,0.3); }
+.admin-modal .btn-submit { background:var(--hijau-muda); }
+.admin-modal .btn-submit:hover { background:var(--hijau); }
+
+
+/* ===== MULTI FOTO UPLOAD ===== */
+.multi-preview-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+  gap:8px;
+  margin-top:0.8rem;
+}
+.multi-preview-item {
+  position:relative;
+  aspect-ratio:1;
+  border-radius:8px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+}
+.multi-preview-item img {
+  width:100%; height:100%; object-fit:cover;
+}
+.multi-preview-item .remove-photo {
+  position:absolute; top:3px; right:3px;
+  width:20px; height:20px; border-radius:50%;
+  background:rgba(220,38,38,0.85); color:#fff;
+  border:none; cursor:pointer; font-size:0.7rem;
+  display:flex; align-items:center; justify-content:center;
+  line-height:1;
+}
+.multi-preview-item .photo-num {
+  position:absolute; bottom:3px; left:3px;
+  background:rgba(0,0,0,0.6); color:#fff;
+  font-size:0.65rem; padding:1px 5px; border-radius:4px;
+}
+.upload-count-badge {
+  display:inline-block;
+  background:rgba(200,150,12,0.2);
+  color:#f0c040; border:1px solid rgba(200,150,12,0.3);
+  padding:2px 10px; border-radius:10px;
+  font-size:0.78rem; margin-top:0.4rem;
+}
+.slideshow-container {
+  position:relative; overflow:hidden;
+  border-radius:0;
+}
+.slideshow-container .news-img {
+  display:none;
+}
+.slideshow-container .news-img.active {
+  display:block;
+}
+.slide-dots {
+  position:absolute; bottom:6px; left:0; right:0;
+  display:flex; justify-content:center; gap:4px;
+  z-index:2;
+}
+.slide-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:rgba(255,255,255,0.5); cursor:pointer;
+  transition:background 0.2s;
+}
+.slide-dot.active { background:#fff; }
+
+
+/* ===== TOMBOL ADMIN TERSEMBUNYI ===== */
+#secretAdminBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#secretAdminBtn:hover {
+  opacity: 0.15;
+  background: rgba(200,150,12,0.3);
+}
+/* Tambahan: indikator kecil untuk tahu area klik */
+
+/* ===== NAVBAR ===== */
+#navbar {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  background:rgba(10,31,68,0.97);
+  backdrop-filter:blur(12px);
+  border-bottom:2px solid var(--emas);
+  padding:0 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+  height:70px;
+  transition:all 0.3s;
+}
+.nav-brand {
+  display:flex; align-items:center; gap:12px;
+}
+.nav-logo {
+  width:46px; height:46px; border-radius:50%;
+  border:2px solid var(--emas);
+  object-fit:cover;
+  background:var(--emas);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; font-weight:bold; color:var(--hijau-tua);
+  overflow:hidden;
+}
+.nav-logo img { width:100%; height:100%; object-fit:cover; }
+.nav-title { 
+  color:var(--putih);
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem; font-weight:700;
+  line-height:1.2;
+}
+.nav-title span { 
+  font-size:0.7rem; font-family:'Crimson Pro',serif;
+  color:var(--emas-muda); display:block; font-weight:300;
+}
+.nav-links {
+  display:flex; align-items:center; gap:0.2rem;
+  list-style:none;
+}
+.nav-links a {
+  color:rgba(255,255,255,0.85);
+  text-decoration:none;
+  font-size:0.85rem;
+  padding:6px 12px;
+  border-radius:4px;
+  transition:all 0.2s;
+  font-family:'Crimson Pro',serif;
+  font-weight:400;
+  letter-spacing:0.3px;
+}
+.nav-links a:hover { color:var(--emas-muda); background:rgba(255,255,255,0.08); }
+.nav-daftar {
+  background:var(--emas) !important;
+  color:var(--hijau-tua) !important;
+  font-weight:600 !important;
+  padding:7px 16px !important;
+  border-radius:20px !important;
+}
+.nav-daftar:hover { background:var(--emas-muda) !important; }
+.nav-admin-btn {
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.3);
+  color:rgba(255,255,255,0.7);
+  padding:5px 12px;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:0.8rem;
+  font-family:'Crimson Pro',serif;
+  transition:all 0.2s;
+  margin-left:0.5rem;
+}
+.nav-admin-btn:hover { border-color:var(--emas); color:var(--emas); }
+.hamburger {
+  display:none;
+  flex-direction:column; gap:5px; cursor:pointer;
+  background:none; border:none; padding:5px;
+}
+.hamburger span { 
+  display:block; width:24px; height:2px; 
+  background:var(--putih); border-radius:2px; transition:0.3s;
+}
+@media(max-width:900px){
+  .nav-links { 
+    display:none; position:fixed; top:70px; left:0; right:0;
+    background:linear-gradient(135deg, #0a1f44 0%, #1a3a6b 100%); flex-direction:column;
+    padding:1rem; gap:0.3rem;
+    border-bottom:2px solid var(--emas);
+  }
+  .nav-links.open { display:flex; }
+  .nav-links a { padding:10px 16px; border-radius:6px; }
+  .hamburger { display:flex; }
+  .nav-admin-btn { display:flex; font-size:0.72rem; padding:4px 8px; }
+}
+
+/* ===== HERO ===== */
+#hero {
+  min-height:100vh;
+  background:linear-gradient(135deg, #0a1f44 0%, #1a3a6b 40%, #1e4d8c 70%, #c8960c 100%);
+  position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background-image:url('');
+  background-size:cover; background-position:center;
+  opacity:0.15;
+  transition:opacity 0.5s;
+  z-index:0;
+}
+.hero-bg.has-image { opacity:0.4; }
+#heroBgVideo { pointer-events:none; }
+#heroBgVideo.active { opacity:0.45; }
+.hero-pattern {
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(200,150,12,0.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(37,99,176,0.2) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(30,77,140,0.1) 0%, transparent 70%);
+}
+.hero-content {
+  position:relative; z-index:2;
+  max-width:800px; padding:2rem;
+}
+.hero-pattern { z-index:1; }
+.hero-logo-wrap {
+  width:110px; height:110px; border-radius:50%;
+  border:4px solid var(--emas);
+  margin:0 auto 1.5rem;
+  overflow:hidden;
+  background:rgba(255,255,255,0.1);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 30px rgba(212,160,23,0.4);
+}
+.hero-logo-wrap img { width:100%; height:100%; object-fit:cover; }
+.hero-logo-placeholder {
+  font-size:2.5rem; font-weight:900;
+  font-family:'Playfair Display',serif;
+  color:var(--emas);
+}
+.hero-subtitle {
+  color:var(--emas-muda);
+  font-size:0.9rem; letter-spacing:4px; text-transform:uppercase;
+  font-family:'Crimson Pro',serif; font-weight:300;
+  margin-bottom:0.5rem;
+}
+.hero-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.5rem, 6vw, 4.5rem);
+  color:var(--putih);
+  font-weight:900;
+  line-height:1.1;
+  margin-bottom:1rem;
+  text-shadow:0 2px 20px rgba(0,0,0,0.3);
+}
+.hero-tagline {
+  font-family:'Dancing Script', cursive;
+  font-size:clamp(1.3rem, 3vw, 2rem);
+  color:var(--emas-muda);
+  margin-bottom:1.5rem;
+  font-weight:700;
+}
+.hero-desc {
+  color:rgba(255,255,255,0.8);
+  font-size:1.05rem; line-height:1.7;
+  margin-bottom:2rem;
+  font-weight:300;
+}
+.hero-buttons { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+.btn-primary {
+  background:var(--emas);
+  color:var(--gelap);
+  padding:12px 32px;
+  border-radius:30px;
+  text-decoration:none;
+  font-weight:700;
+  font-family:'Crimson Pro',serif;
+  font-size:1rem;
+  transition:all 0.3s;
+  border:none; cursor:pointer;
+  box-shadow:0 4px 15px rgba(212,160,23,0.4);
+}
+.btn-primary:hover { background:var(--emas-muda); transform:translateY(-2px); box-shadow:0 6px 20px rgba(212,160,23,0.5); }
+.btn-outline {
+  background:transparent;
+  color:var(--putih);
+  padding:12px 32px;
+  border-radius:30px;
+  text-decoration:none;
+  font-weight:600;
+  font-family:'Crimson Pro',serif;
+  font-size:1rem;
+  border:2px solid rgba(255,255,255,0.5);
+  transition:all 0.3s;
+  cursor:pointer;
+}
+.btn-outline:hover { border-color:var(--putih); background:rgba(255,255,255,0.1); }
+.hero-stats {
+  display:flex; gap:2rem; justify-content:center; flex-wrap:wrap;
+  margin-top:3rem; padding-top:2rem;
+  border-top:1px solid rgba(255,255,255,0.15);
+}
+.stat-item { text-align:center; }
+.stat-num { 
+  font-family:'Playfair Display',serif; 
+  font-size:2rem; font-weight:700; 
+  color:var(--emas-muda); 
+}
+.stat-label { color:rgba(255,255,255,0.6); font-size:0.8rem; letter-spacing:1px; }
+
+/* ===== SECTIONS ===== */
+.section { padding:80px 2rem; }
+.section-alt { background:var(--putih); }
+.container { max-width:1100px; margin:0 auto; }
+.section-header { text-align:center; margin-bottom:3rem; }
+.section-tag {
+  display:inline-block;
+  background:var(--hijau-muda);
+  color:var(--putih);
+  font-size:0.75rem; letter-spacing:3px; text-transform:uppercase;
+  padding:4px 16px; border-radius:20px;
+  font-family:'Crimson Pro',serif;
+  margin-bottom:0.8rem;
+}
+.section-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem, 4vw, 2.8rem);
+  color:var(--hijau-tua);
+  font-weight:700;
+  margin-bottom:0.5rem;
+}
+.section-line {
+  width:60px; height:3px;
+  background:linear-gradient(90deg, var(--emas), var(--emas-muda));
+  margin:0.8rem auto;
+  border-radius:3px;
+}
+.section-desc { color:var(--abu); font-size:1rem; max-width:600px; margin:0 auto; line-height:1.7; }
+
+/* ===== VISI MISI ===== */
+.vm-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+@media(max-width:768px){ .vm-grid { grid-template-columns:1fr; } }
+.vm-card {
+  background:var(--krem);
+  border-radius:16px;
+  padding:2rem;
+  border:1px solid rgba(45,106,79,0.15);
+  position:relative;
+  overflow:hidden;
+}
+.vm-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg, var(--hijau), var(--emas));
+}
+.vm-card-icon { font-size:2.5rem; margin-bottom:1rem; }
+.vm-card-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem; color:var(--hijau-tua);
+  margin-bottom:1rem; font-weight:700;
+}
+.vm-card-text { color:var(--abu); line-height:1.8; font-size:1rem; }
+.misi-list { list-style:none; }
+.misi-list li {
+  padding:6px 0; padding-left:1.5rem; position:relative;
+  color:var(--abu); line-height:1.6;
+}
+.misi-list li::before {
+  content:'◆'; position:absolute; left:0; 
+  color:var(--emas); font-size:0.6rem; top:10px;
+}
+
+/* ===== BERITA ===== */
+.news-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:2rem; }
+.news-card {
+  background:var(--putih);
+  border-radius:16px; overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.06);
+  transition:transform 0.3s, box-shadow 0.3s;
+  cursor:pointer;
+}
+.news-card:hover { transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,0,0,0.12); }
+.news-img {
+  width:100%; height:200px; object-fit:cover;
+  background:linear-gradient(135deg,var(--hijau),var(--hijau-muda));
+}
+.news-img-placeholder {
+  width:100%; height:200px;
+  background:linear-gradient(135deg,var(--hijau) 0%,var(--hijau-muda) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-size:3rem;
+}
+.news-body { padding:1.5rem; }
+.news-date { color:var(--emas); font-size:0.8rem; margin-bottom:0.5rem; letter-spacing:1px; }
+.news-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.15rem; color:var(--gelap);
+  margin-bottom:0.8rem; font-weight:600;
+  line-height:1.4;
+}
+.news-excerpt { color:var(--abu); font-size:0.9rem; line-height:1.6; }
+.news-more { 
+  color:var(--hijau-muda); font-size:0.85rem; 
+  margin-top:1rem; display:inline-block;
+  text-decoration:none; font-weight:600;
+}
+
+/* ===== EKSTRAKURIKULER ===== */
+.ekskul-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:1.5rem; }
+.ekskul-card {
+  background:var(--putih);
+  border-radius:16px; overflow:hidden;
+  box-shadow:0 4px 15px rgba(0,0,0,0.07);
+  transition:all 0.3s;
+}
+.ekskul-card:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(0,0,0,0.12); }
+.ekskul-img {
+  width:100%; height:180px; object-fit:cover;
+  background:linear-gradient(135deg,var(--hijau-tua),var(--emas));
+}
+.ekskul-img-placeholder {
+  width:100%; height:180px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:3rem;
+  background:linear-gradient(135deg,var(--hijau-tua),var(--emas));
+}
+.ekskul-body { padding:1.2rem; }
+.ekskul-name {
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem; color:var(--hijau-tua); font-weight:700;
+  margin-bottom:0.4rem;
+}
+.ekskul-desc { color:var(--abu); font-size:0.88rem; line-height:1.5; }
+.ekskul-badge {
+  display:inline-block; margin-top:0.8rem;
+  background:rgba(45,106,79,0.1); color:var(--hijau);
+  padding:3px 10px; border-radius:12px; font-size:0.78rem;
+  font-weight:600;
+}
+
+/* ===== GALERI ===== */
+.galeri-grid { 
+  display:grid; 
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); 
+  gap:1rem;
+}
+.galeri-item {
+  border-radius:12px; overflow:hidden;
+  aspect-ratio:1; cursor:pointer;
+  position:relative;
+  background:var(--hijau);
+}
+.galeri-item img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform 0.4s;
+}
+.galeri-item:hover img { transform:scale(1.05); }
+.galeri-overlay {
+  position:absolute; inset:0;
+  background:rgba(26,71,49,0.7);
+  opacity:0; transition:0.3s;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--putih); font-size:2rem;
+}
+.galeri-item:hover .galeri-overlay { opacity:1; }
+.galeri-placeholder {
+  width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.5rem;
+  background:linear-gradient(135deg,var(--hijau-tua),var(--emas));
+}
+
+/* ===== GURU ===== */
+.guru-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:2rem; }
+.guru-card {
+  background:var(--putih);
+  border-radius:16px; overflow:hidden;
+  box-shadow:0 4px 15px rgba(0,0,0,0.07);
+  text-align:center; padding:2rem 1.5rem;
+  transition:all 0.3s;
+}
+.guru-card:hover { transform:translateY(-4px); box-shadow:0 8px 25px rgba(0,0,0,0.12); }
+.guru-photo {
+  width:90px; height:90px; border-radius:50%;
+  margin:0 auto 1rem;
+  border:3px solid var(--hijau-muda);
+  object-fit:cover;
+  background:var(--hijau-muda);
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2rem;
+}
+.guru-photo img { width:100%; height:100%; object-fit:cover; }
+.guru-name { 
+  font-family:'Playfair Display',serif;
+  font-size:1rem; color:var(--hijau-tua); font-weight:700; 
+  margin-bottom:0.3rem;
+}
+.guru-mapel { color:var(--emas); font-size:0.85rem; font-weight:600; margin-bottom:0.3rem; }
+.guru-role { color:var(--abu); font-size:0.82rem; }
+.kepsek-badge {
+  display:inline-block; margin-top:0.5rem;
+  background:var(--emas); color:var(--hijau-tua);
+  padding:2px 10px; border-radius:12px; font-size:0.75rem; font-weight:700;
+}
+
+/* ===== PROFIL ===== */
+.profil-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+@media(max-width:768px){ .profil-grid { grid-template-columns:1fr; } }
+.profil-info table { width:100%; border-collapse:collapse; }
+.profil-info td { padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.06); vertical-align:top; }
+.profil-info td:first-child { 
+  color:var(--hijau); font-weight:600; width:45%; font-size:0.9rem;
+}
+.profil-info td:last-child { color:var(--gelap); font-size:0.9rem; }
+.tujuan-list { list-style:none; }
+.tujuan-list li {
+  padding:8px 0; padding-left:1.5rem; 
+  position:relative; color:var(--abu); line-height:1.6;
+  border-bottom:1px solid rgba(0,0,0,0.05);
+}
+.tujuan-list li::before {
+  content:'✦'; position:absolute; left:0;
+  color:var(--emas); font-size:0.7rem; top:12px;
+}
+
+/* ===== KONTAK ===== */
+.kontak-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; }
+@media(max-width:768px){ .kontak-grid { grid-template-columns:1fr; } }
+.kontak-item {
+  display:flex; align-items:flex-start; gap:1rem;
+  margin-bottom:1.5rem;
+}
+.kontak-icon {
+  width:44px; height:44px; border-radius:12px;
+  background:var(--hijau); color:var(--putih);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; flex-shrink:0;
+}
+.kontak-icon i { font-size:1.1rem; }
+.kontak-label { color:var(--hijau); font-weight:600; font-size:0.85rem; margin-bottom:0.2rem; }
+.kontak-text { color:var(--gelap); font-size:0.95rem; }
+.sosmed-links { display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem; }
+.sosmed-btn {
+  display:inline-flex; align-items:center; gap:0.6rem;
+  padding:9px 18px; border-radius:20px;
+  text-decoration:none; font-size:0.9rem; font-weight:600;
+  transition:all 0.3s; letter-spacing:0.3px;
+}
+.sosmed-btn i { font-size:1.1rem; }
+.sosmed-ig { background:#e1306c; color:white; }
+.sosmed-yt { background:#ff0000; color:white; }
+.sosmed-tt { background:#000; color:white; }
+.sosmed-wa { background:#25d366; color:white; }
+.sosmed-btn:hover { opacity:0.85; transform:translateY(-2px); }
+.map-frame {
+  border-radius:16px; overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.1);
+}
+.map-frame iframe { width:100%; height:350px; border:none; display:block; }
+
+/* ===== FOOTER ===== */
+footer {
+  background:linear-gradient(135deg, #0a1f44 0%, #1a3a6b 100%);
+  color:rgba(255,255,255,0.7);
+  text-align:center; padding:2rem;
+  border-top:2px solid var(--emas);
+}
+footer a { color:var(--emas-muda); text-decoration:none; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.7);
+  z-index:2000; display:none; align-items:center; justify-content:center;
+  padding:1rem;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--putih); border-radius:20px;
+  max-width:500px; width:100%;
+  max-height:90vh; overflow-y:auto;
+  padding:2.5rem;
+  position:relative;
+}
+.modal-lg { max-width:800px; }
+.modal-close {
+  position:absolute; top:1rem; right:1rem;
+  background:none; border:none; font-size:1.5rem;
+  cursor:pointer; color:var(--abu);
+  transition:color 0.2s;
+}
+.modal-close:hover { color:var(--merah); }
+.modal-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem; color:var(--hijau-tua);
+  margin-bottom:1.5rem; font-weight:700;
+}
+.form-group { margin-bottom:1.2rem; }
+.form-label { 
+  display:block; font-weight:600; 
+  color:var(--hijau-tua); font-size:0.9rem; margin-bottom:0.4rem; 
+}
+.form-input, .form-textarea, .form-select {
+  width:100%; padding:10px 14px;
+  border:1.5px solid rgba(0,0,0,0.15); border-radius:8px;
+  font-family:'Crimson Pro',serif; font-size:1rem;
+  color:var(--gelap); background:var(--krem);
+  transition:border-color 0.2s;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  outline:none; border-color:var(--hijau-muda);
+}
+.form-textarea { resize:vertical; min-height:100px; }
+.btn-submit {
+  background:var(--hijau); color:var(--putih);
+  border:none; padding:11px 28px; border-radius:25px;
+  font-size:1rem; font-family:'Crimson Pro',serif; font-weight:600;
+  cursor:pointer; transition:all 0.3s; width:100%;
+}
+.btn-submit:hover { background:var(--hijau-tua); }
+.btn-submit:disabled { opacity:0.6; cursor:not-allowed; }
+.form-hint { font-size:0.8rem; color:var(--abu); margin-top:0.3rem; }
+.upload-area {
+  border:2px dashed rgba(45,106,79,0.3);
+  border-radius:10px; padding:1.5rem;
+  text-align:center; cursor:pointer;
+  transition:all 0.2s; background:rgba(45,106,79,0.02);
+}
+.upload-area:hover { border-color:var(--hijau-muda); background:rgba(45,106,79,0.05); }
+.upload-area input { display:none; }
+.upload-preview { max-width:100%; max-height:200px; border-radius:8px; margin-top:1rem; }
+
+/* ===== ADMIN PANEL ===== */
+#adminPanel {
+  position:fixed; inset:0; z-index:3000;
+  background:#060f1e;
+  display:none; flex-direction:row;
+  overflow:hidden;
+}
+#adminPanel.open { display:flex; }
+.admin-sidebar {
+  width:260px; background:#1e293b;
+  border-right:1px solid rgba(255,255,255,0.08);
+  display:flex; flex-direction:column;
+  overflow-y:auto;
+}
+.admin-sidebar-header {
+  padding:1.5rem;
+  border-bottom:1px solid rgba(200,150,12,0.2);
+}
+.admin-sidebar-title {
+  color:var(--putih); font-family:'Playfair Display',serif;
+  font-size:1.1rem; font-weight:700;
+}
+.admin-sidebar-sub { color:rgba(255,255,255,0.4); font-size:0.8rem; }
+.admin-menu { list-style:none; padding:1rem 0; flex:1; }
+.admin-menu li a, .admin-menu li button {
+  display:flex; align-items:center; gap:0.8rem;
+  padding:10px 1.5rem;
+  color:rgba(255,255,255,0.6);
+  text-decoration:none; background:none; border:none;
+  font-size:0.9rem; font-family:'Crimson Pro',serif;
+  cursor:pointer; width:100%; text-align:left;
+  transition:all 0.2s; border-radius:0;
+}
+.admin-menu li a:hover, .admin-menu li button:hover,
+.admin-menu li a.active, .admin-menu li button.active {
+  color:var(--putih); background:rgba(255,255,255,0.07);
+  padding-left:2rem;
+}
+.admin-menu li a.active, .admin-menu li button.active {
+  border-left:3px solid var(--emas);
+  color:var(--emas-muda);
+}
+.admin-logout-btn {
+  margin:1rem;
+  padding:10px; border-radius:8px;
+  background:rgba(220,38,38,0.1);
+  color:var(--merah) !important;
+  border:1px solid rgba(220,38,38,0.2) !important;
+}
+.admin-main {
+  flex:1; overflow-y:auto;
+  padding:2rem;
+  background:#060f1e;
+}
+.admin-section { display:none; }
+.admin-section.active { display:block; }
+.admin-title {
+  color:var(--putih); font-family:'Playfair Display',serif;
+  font-size:1.8rem; font-weight:700;
+  margin-bottom:1.5rem;
+}
+.admin-card {
+  background:#0d1f3c; border-radius:12px;
+  padding:1.5rem; margin-bottom:1.5rem;
+  border:1px solid rgba(200,150,12,0.15);
+}
+.admin-card-title { color:rgba(255,255,255,0.8); font-size:1rem; font-weight:600; margin-bottom:1rem; }
+.admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
+.admin-item-card {
+  background:#060f1e; border-radius:8px;
+  padding:1rem; border:1px solid rgba(255,255,255,0.06);
+  display:flex; flex-direction:column; gap:0.5rem;
+}
+.admin-item-img {
+  width:100%; height:140px; object-fit:cover; border-radius:6px;
+  background:var(--hijau);
+}
+.admin-item-title { color:var(--putih); font-size:0.9rem; font-weight:600; }
+.admin-item-sub { color:rgba(255,255,255,0.4); font-size:0.8rem; }
+.admin-item-actions { display:flex; gap:0.5rem; margin-top:0.5rem; }
+.btn-edit {
+  background:rgba(212,160,23,0.15); color:var(--emas);
+  border:1px solid rgba(212,160,23,0.3);
+  padding:5px 12px; border-radius:6px; font-size:0.8rem;
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-edit:hover { background:rgba(212,160,23,0.25); }
+.btn-del {
+  background:rgba(220,38,38,0.1); color:var(--merah);
+  border:1px solid rgba(220,38,38,0.2);
+  padding:5px 12px; border-radius:6px; font-size:0.8rem;
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-del:hover { background:rgba(220,38,38,0.2); }
+.btn-add {
+  background:var(--hijau); color:var(--putih);
+  border:none; padding:9px 20px; border-radius:8px;
+  font-size:0.9rem; cursor:pointer;
+  transition:all 0.2s; margin-bottom:1rem;
+  font-family:'Crimson Pro',serif;
+}
+.btn-add:hover { background:var(--hijau-muda); }
+.admin-form-input, .admin-form-textarea, .admin-form-select {
+  width:100%; padding:9px 12px;
+  background:rgba(37,99,176,0.15);
+  border:1px solid rgba(200,150,12,0.2);
+  border-radius:6px; color:var(--putih);
+  font-family:'Crimson Pro',serif; font-size:0.95rem;
+  transition:border-color 0.2s;
+}
+.admin-form-input:focus, .admin-form-textarea:focus, .admin-form-select:focus {
+  outline:none; border-color:var(--hijau-muda);
+}
+.admin-form-textarea { resize:vertical; min-height:80px; }
+.admin-form-select option { background:#1e293b; }
+.admin-form-label { color:rgba(255,255,255,0.7); font-size:0.85rem; margin-bottom:0.4rem; display:block; }
+.admin-upload-area {
+  border:2px dashed rgba(255,255,255,0.15);
+  border-radius:8px; padding:1.5rem;
+  text-align:center; cursor:pointer;
+  color:rgba(255,255,255,0.4); font-size:0.9rem;
+  transition:all 0.2s;
+}
+.admin-upload-area:hover { border-color:var(--hijau-muda); color:rgba(255,255,255,0.7); }
+.admin-upload-area input { display:none; }
+.toast {
+  position:fixed; bottom:2rem; right:2rem;
+  background:linear-gradient(135deg, #0a1f44 0%, #1a3a6b 100%); color:var(--putih);
+  padding:12px 20px; border-radius:10px;
+  font-size:0.9rem; z-index:9999;
+  transform:translateY(100px); opacity:0;
+  transition:all 0.3s;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  border-left:4px solid var(--emas);
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast.error { border-left-color:var(--merah); background:#7f1d1d; }
+.loading { text-align:center; padding:2rem; color:var(--abu); }
+.tag-kepsek {
+  display:inline-block; background:var(--emas); color:var(--hijau-tua);
+  padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:700;
+  margin-left:0.5rem; vertical-align:middle;
+}
+@media(max-width:768px){
+  .admin-sidebar { width:200px; }
+  .admin-main { padding:1rem; }
+}
+@media(max-width:600px){
+  .admin-sidebar { display:none; }
+  #adminPanel.open { flex-direction:column; }
+}
+
+/* ===== LIGHTBOX ===== */
+#lightbox {
+  position:fixed; inset:0; background:rgba(0,0,0,0.92);
+  z-index:5000; display:none;
+  align-items:center; justify-content:center;
+}
+#lightbox.open { display:flex; }
+#lightbox img { max-width:90vw; max-height:90vh; border-radius:8px; }
+#lightbox-close {
+  position:absolute; top:1rem; right:1.5rem;
+  color:white; font-size:2rem; cursor:pointer;
+  background:none; border:none;
+}
+
+/* ===== LOGIN ===== */
+#loginModal .modal {
+  max-width:420px;
+}
+.login-logo { text-align:center; margin-bottom:1.5rem; }
+.login-logo-icon {
+  width:70px; height:70px; border-radius:50%;
+  background:var(--hijau); color:var(--putih);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.8rem; margin:0 auto 0.8rem;
+  border:3px solid var(--emas);
+}
+.alert-box {
+  padding:10px 14px; border-radius:8px;
+  font-size:0.9rem; margin-bottom:1rem;
+}
+.alert-error { background:rgba(220,38,38,0.1); color:var(--merah); border:1px solid rgba(220,38,38,0.2); }
+.alert-success { background:rgba(45,106,79,0.1); color:var(--hijau); border:1px solid rgba(45,106,79,0.2); }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo" id="navLogo">
+      <span id="navLogoText">AF</span>
+    </div>
+    <div class="nav-title">
+      SMA AL-FIIL
+      <span style="font-family:'Dancing Script',cursive;font-size:0.8rem;font-weight:700">For The Brighter Future</span>
+    </div>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#beranda">Beranda</a></li>
+    <li><a href="#profil">Profil</a></li>
+    <li><a href="#berita">Berita</a></li>
+    <li><a href="#ekskul">Ekskul</a></li>
+    <li><a href="#galeri">Galeri</a></li>
+    <li><a href="#guru">Guru</a></li>
+    <li><a href="#kontak">Kontak</a></li>
+    <li><a href="https://taplink.cc/smaalfiil" target="_blank" class="nav-daftar">Pendaftaran</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:0.5rem">
+    <!-- Tombol admin disembunyikan. Akses: klik logo 5x atau tekan Ctrl+Shift+A -->
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="beranda" class="section" style="padding:0">
+  <div id="hero">
+    <!-- Video/Image Background -->
+    <div class="hero-bg" id="heroBg"></div>
+    <video id="heroBgVideo" autoplay muted loop playsinline
+      style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;display:none;z-index:0">
+    </video>
+    <div class="hero-pattern"></div>
+    <div class="hero-content">
+      <div class="hero-logo-wrap" id="heroLogoWrap">
+        <span class="hero-logo-placeholder" id="heroLogoText">AF</span>
+      </div>
+      <div class="hero-subtitle">Selamat Datang di</div>
+      <h1 class="hero-title">SMA AL-FIIL</h1>
+      <div class="hero-tagline" id="heroTagline">For The Brighter Future</div>
+      <p class="hero-desc" id="heroDesc">Lembaga pendidikan menengah atas yang berdiri sejak 3 Mei 2006, berkomitmen membentuk generasi yang tangguh, mandiri, dan siap mengabdi.</p>
+      <div class="hero-buttons">
+        <a href="https://taplink.cc/smaalfiil" target="_blank" class="btn-primary">Daftar Sekarang</a>
+        <a href="#profil" class="btn-outline">Tentang Kami</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">2006</div><div class="stat-label">Berdiri Sejak</div></div>
+        <div class="stat-item"><div class="stat-num" id="statGuru">—</div><div class="stat-label">Tenaga Pendidik</div></div>
+        <div class="stat-item"><div class="stat-num" id="statEkskul">—</div><div class="stat-label">Ekstrakurikuler</div></div>
+        <div class="stat-item"><div class="stat-num" id="statBerita">—</div><div class="stat-label">Berita & Info</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISI MISI -->
+<section class="section section-alt" id="visi">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Landasan Sekolah</span>
+      <h2 class="section-title">Visi & Misi</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="vm-grid">
+      <div class="vm-card">
+        <div class="vm-card-icon"><i class="fa-solid fa-star" style="color:var(--emas)"></i></div>
+        <div class="vm-card-title">Visi</div>
+        <div class="vm-card-text" id="visiText">Terwujudnya sekolah yang berprestasi, mandiri, dan kreatif berdasarkan iman dan taqwa.</div>
+      </div>
+      <div class="vm-card">
+        <div class="vm-card-icon"><i class="fa-solid fa-bullseye" style="color:var(--hijau)"></i></div>
+        <div class="vm-card-title">Misi</div>
+        <ul class="misi-list" id="misiList">
+          <li>Meningkatkan keimanan dan ketaqwaan bagi seluruh warga sekolah</li>
+          <li>Melaksanakan proses pembelajaran yang interaktif, inspiratif dan menyenangkan</li>
+          <li>Menciptakan suasana lingkungan sekolah yang kondusif untuk KBM</li>
+          <li>Menciptakan hubungan dan kerja sama antara sekolah dengan orang tua, masyarakat dan instansi lainnya</li>
+          <li>Mewujudkan fasilitas sekolah yang memadai</li>
+          <li>Meningkatkan prestasi dan kreatifitas siswa di bidang seni, budaya dan olahraga</li>
+          <li>Meningkatkan keterampilan siswa di bidang kewirausahaan</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFIL -->
+<section class="section" id="profil">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Tentang Kami</span>
+      <h2 class="section-title">Profil Sekolah</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="profil-grid">
+      <div class="profil-info">
+        <table>
+          <tr><td>Nama Sekolah</td><td>SMA AL-FIIL</td></tr>
+          <tr><td>Berdiri Sejak</td><td>3 Mei 2006</td></tr>
+          <tr><td>Alamat</td><td id="alamatText">Jln. Gajah Eretan No. 19, Gajah Mekar – Kutawaringin, Kab. Bandung</td></tr>
+          <tr><td>Email</td><td><span id="emailDisplay1" style="color:var(--hijau);cursor:pointer" onclick="bukaEmail()">smaalfiil15&#64;gmail&#46;com</span></td></tr>
+          <tr><td>WhatsApp</td><td><a href="https://wa.me/6285659627944" style="color:var(--hijau)">0856-5962-7944</a></td></tr>
+          <tr><td>Jenjang</td><td>Sekolah Menengah Atas (SMA)</td></tr>
+          <tr><td>Status</td><td>Swasta / Yayasan</td></tr>
+        </table>
+        <div style="margin-top:2rem">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--hijau-tua);margin-bottom:1rem;font-size:1.2rem">Tentang Sekolah</h3>
+          <p id="tentangText" style="color:var(--abu);line-height:1.8;font-size:1rem">SMA AL-FIIL merupakan lembaga pendidikan menengah atas yang berdiri sejak 3 Mei 2006, dengan komitmen kuat dalam membentuk generasi yang tangguh, mandiri, dan siap mengabdi. Sekolah ini hadir sebagai institusi yang tidak hanya menekankan pencapaian akademik, tetapi juga pembentukan karakter, akhlak mulia, serta nilai kebersamaan dalam lingkungan yang religius dan kekeluargaan.</p>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;color:var(--hijau-tua);margin-bottom:1rem;font-size:1.2rem">Tujuan Pendidikan</h3>
+        <ul class="tujuan-list" id="tujuanList">
+          <li>Terwujudnya lingkungan sekolah yang religius dengan seluruh warga taat beribadah</li>
+          <li>Terciptanya suasana ukhuwah islamiyah di lingkungan sekolah</li>
+          <li>Terciptanya lingkungan belajar yang kondusif dan nyaman</li>
+          <li>Terwujudnya peningkatan prestasi akademik yang unggul</li>
+          <li>Terciptanya lulusan yang mampu bersaing dalam seleksi perguruan tinggi</li>
+          <li>Terwujudnya lulusan yang berkualitas dan siap kerja</li>
+          <li>Terciptanya kemitraan yang harmonis dengan berbagai pihak</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BERITA -->
+<section class="section section-alt" id="berita">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Info Terkini</span>
+      <h2 class="section-title">Berita & Pengumuman</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">Ikuti perkembangan terbaru dari SMA AL-FIIL</p>
+    </div>
+    <div class="news-grid" id="newsGrid">
+      <div class="loading">⏳ Memuat berita...</div>
+    </div>
+  </div>
+</section>
+
+<!-- EKSKUL -->
+<section class="section" id="ekskul">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Kegiatan Siswa</span>
+      <h2 class="section-title">Ekstrakurikuler</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">Kembangkan bakat dan minatmu bersama kami</p>
+    </div>
+    <div class="ekskul-grid" id="ekskulGrid">
+      <div class="loading">⏳ Memuat ekstrakurikuler...</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERI -->
+<section class="section section-alt" id="galeri">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Dokumentasi</span>
+      <h2 class="section-title">Galeri Foto</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="galeri-grid" id="galeriGrid">
+      <div class="loading">⏳ Memuat galeri...</div>
+    </div>
+  </div>
+</section>
+
+<!-- GURU -->
+<section class="section" id="guru">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Tenaga Pendidik</span>
+      <h2 class="section-title">Data Guru & Kepala Sekolah</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="guru-grid" id="guruGrid">
+      <div class="loading">⏳ Memuat data guru...</div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAK -->
+<section class="section section-alt" id="kontak">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Hubungi Kami</span>
+      <h2 class="section-title">Kontak & Lokasi</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="kontak-grid">
+      <div>
+        <div class="kontak-item">
+          <div class="kontak-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div>
+            <div class="kontak-label">Alamat</div>
+            <div class="kontak-text">Jln. Gajah Eretan No. 19, Gajah Mekar – Kutawaringin, Kab. Bandung</div>
+          </div>
+        </div>
+        <div class="kontak-item">
+          <div class="kontak-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div>
+            <div class="kontak-label">Email</div>
+            <div class="kontak-text"><span id="emailDisplay2" style="color:var(--hijau);cursor:pointer" onclick="bukaEmail()">smaalfiil15&#64;gmail&#46;com</span></div>
+          </div>
+        </div>
+        <div class="kontak-item">
+          <div class="kontak-icon"><i class="fa-brands fa-whatsapp"></i></div>
+          <div>
+            <div class="kontak-label">WhatsApp</div>
+            <div class="kontak-text"><a href="https://wa.me/6285659627944" style="color:var(--hijau)">0856-5962-7944</a></div>
+          </div>
+        </div>
+        <div>
+          <div class="kontak-label" style="margin-bottom:0.8rem">Media Sosial</div>
+          <div class="sosmed-links">
+            <a href="https://instagram.com/smaalfiil" target="_blank" class="sosmed-btn sosmed-ig"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            <a href="https://youtube.com/@smaalfiil" target="_blank" class="sosmed-btn sosmed-yt"><i class="fa-brands fa-youtube"></i> YouTube</a>
+            <a href="https://tiktok.com/@smaalfiil" target="_blank" class="sosmed-btn sosmed-tt"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+            <a href="https://wa.me/6285659627944" target="_blank" class="sosmed-btn sosmed-wa"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="map-frame">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15841.292158273214!2d107.52191792487065!3d-6.9711631892353365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68edcfb8abefff%3A0x697e93f707c14656!2sSMA%20Al-Fill%20%26%20SMK%20BROSSA!5e0!3m2!1sid!2sid!4v1772602684202!5m2!1sid!2sid"
+  width="100%" height="350" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Lokasi SMA AL-FIIL"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="margin-bottom:0.5rem">
+    <strong style="color:var(--emas);font-family:'Playfair Display',serif;font-size:1.1rem">SMA AL-FIIL</strong>
+  </div>
+  <div style="font-size:0.9rem;margin-bottom:0.5rem">
+    Jln. Gajah Eretan No. 19, Gajah Mekar – Kutawaringin, Kab. Bandung
+  </div>
+  <div style="font-size:0.8rem;margin-top:1rem;border-top:1px solid rgba(255,255,255,0.1);padding-top:1rem">
+    © 2024 SMA AL-FIIL. All rights reserved. | 
+    <span style="color:var(--emas-muda);cursor:pointer" onclick="bukaEmail()">smaalfiil15&#64;gmail&#46;com</span>
+  </div>
+</footer>
+
+<!-- TOMBOL ADMIN TERSEMBUNYI (pojok kanan bawah, tidak terlihat) -->
+<button id="secretAdminBtn" onclick="openLogin()" title=""></button>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="Galeri" style="display:block">
+  <video id="lightboxVideo" src="" controls autoplay style="display:none;max-width:90vw;max-height:90vh;border-radius:8px"></video>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal" style="display:none">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLogin()">✕</button>
+    <div class="login-logo">
+      <div class="login-logo-icon"><i class="fa-solid fa-lock"></i></div>
+      <div class="modal-title" style="margin-bottom:0.3rem">Login Admin</div>
+      <p style="color:var(--abu);font-size:0.9rem">SMA AL-FIIL Website Management</p>
+    </div>
+    <div id="loginAlert"></div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-input" id="loginUser" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-input" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-submit" onclick="doLogin()" id="loginBtn">Masuk</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none">
+  <div class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <div class="admin-sidebar-title">⚙ Admin Panel</div>
+      <div class="admin-sidebar-sub">SMA AL-FIIL</div>
+    </div>
+    <ul class="admin-menu">
+      <li><button onclick="showAdmin('dashboard')" class="active" id="menu-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</button></li>
+      <li><button onclick="showAdmin('hero')" id="menu-hero"><i class="fa-solid fa-image"></i> Hero & Branding</button></li>
+      <li><button onclick="showAdmin('berita')" id="menu-berita"><i class="fa-solid fa-newspaper"></i> Berita</button></li>
+      <li><button onclick="showAdmin('ekskul')" id="menu-ekskul"><i class="fa-solid fa-futbol"></i> Ekstrakurikuler</button></li>
+      <li><button onclick="showAdmin('galeri')" id="menu-galeri"><i class="fa-solid fa-images"></i> Galeri</button></li>
+      <li><button onclick="showAdmin('guru')" id="menu-guru"><i class="fa-solid fa-chalkboard-user"></i> Guru & Kepsek</button></li>
+      <li><button onclick="showAdmin('profil')" id="menu-profil"><i class="fa-solid fa-school"></i> Profil Sekolah</button></li>
+      <li><button onclick="showAdmin('password')" id="menu-password"><i class="fa-solid fa-key"></i> Ubah Password</button></li>
+      <li><button onclick="closeAdmin()" class="admin-logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></li>
+    </ul>
+  </div>
+  <div class="admin-main">
+
+    <!-- DASHBOARD -->
+    <div class="admin-section active" id="admin-dashboard">
+      <div class="admin-title">📊 Dashboard</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:2rem">
+        <div class="admin-card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:0.5rem">📰</div>
+          <div style="color:var(--emas);font-size:2rem;font-weight:700" id="dash-berita">0</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:0.85rem">Berita</div>
+        </div>
+        <div class="admin-card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:0.5rem">⚽</div>
+          <div style="color:var(--emas);font-size:2rem;font-weight:700" id="dash-ekskul">0</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:0.85rem">Ekstrakurikuler</div>
+        </div>
+        <div class="admin-card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:0.5rem">🖼</div>
+          <div style="color:var(--emas);font-size:2rem;font-weight:700" id="dash-galeri">0</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:0.85rem">Foto Galeri</div>
+        </div>
+        <div class="admin-card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:0.5rem">👨‍🏫</div>
+          <div style="color:var(--emas);font-size:2rem;font-weight:700" id="dash-guru">0</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:0.85rem">Guru</div>
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">ℹ️ Info Konfigurasi Supabase</div>
+        <div style="color:rgba(255,255,255,0.5);font-size:0.85rem;line-height:1.8">
+          Status Koneksi Supabase: <span id="supabaseStatus" style="color:var(--emas)">⏳ Mengecek...</span><br>
+          Status Cloudinary: <span id="cloudinaryStatus" style="color:var(--emas)">⚙ Lihat panduan konfigurasi</span><br><br>
+          <span style="color:rgba(255,255,255,0.3)">Edit file <code style="color:var(--emas)">CONFIG</code> di bagian atas script untuk mengatur Supabase URL & Key dan Cloudinary Cloud Name.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="admin-section" id="admin-hero">
+      <div class="admin-title">🖼 Hero & Branding</div>
+      <div class="admin-card">
+        <div class="admin-card-title">Logo Sekolah</div>
+        <div class="admin-upload-area" onclick="document.getElementById('uploadLogo').click()">
+          <input type="file" id="uploadLogo" accept="image/*" onchange="handleUpload('logo',this)">
+          📷 Klik untuk upload logo sekolah (rekomendasi: 300x300px, PNG transparan)
+        </div>
+        <img id="previewLogo" src="" style="display:none;max-width:120px;margin-top:1rem;border-radius:50%;border:3px solid var(--emas)">
+        <button class="btn-add" style="margin-top:1rem" onclick="saveHero('logo')">💾 Simpan Logo</button>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">Background Hero</div>
+        <div style="display:flex;gap:0.8rem;margin-bottom:1rem;flex-wrap:wrap">
+          <button class="btn-add" style="margin:0" onclick="setBgMode('image')" id="btnModeImg">🖼 Mode Gambar</button>
+          <button class="btn-add" style="margin:0;background:var(--hijau-cerah)" onclick="setBgMode('video')" id="btnModeVid">🎬 Mode Video</button>
+        </div>
+
+        <!-- Mode Gambar -->
+        <div id="bgImageSection">
+          <div class="admin-upload-area" onclick="document.getElementById('uploadBg').click()">
+            <input type="file" id="uploadBg" accept="image/*" onchange="handleUpload('bg',this)">
+            🖼 Klik untuk upload gambar background (rekomendasi: 1920x1080px)
+          </div>
+          <img id="previewBg" src="" style="display:none;max-width:100%;margin-top:1rem;border-radius:8px;max-height:200px;object-fit:cover">
+          <button class="btn-add" style="margin-top:1rem" onclick="saveHero('bg')">💾 Simpan Gambar Background</button>
+        </div>
+
+        <!-- Mode Video -->
+        <div id="bgVideoSection" style="display:none">
+          <div style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-bottom:0.8rem">
+            Format: MP4, WebM. Rekomendasi: resolusi 1920x1080, durasi 10–30 detik, ukuran maks 50MB.<br>
+            Video akan diputar otomatis, tanpa suara, dan berulang.
+          </div>
+          <div class="admin-upload-area" onclick="document.getElementById('uploadBgVideo').click()">
+            <input type="file" id="uploadBgVideo" accept="video/mp4,video/webm,video/ogg" onchange="handleVideoUpload(this)">
+            🎬 Klik untuk pilih file video background
+          </div>
+          <video id="previewBgVideo" style="display:none;width:100%;margin-top:1rem;border-radius:8px;max-height:200px;object-fit:cover" muted playsinline></video>
+          <div style="margin-top:0.5rem">
+            <label class="admin-form-label">Atau masukkan URL video (YouTube tidak didukung — gunakan URL langsung MP4):</label>
+            <input type="text" class="admin-form-input" id="bgVideoUrl" placeholder="https://contoh.com/video.mp4">
+          </div>
+          <button class="btn-add" style="margin-top:1rem;background:var(--hijau-cerah)" onclick="saveHero('video')">💾 Simpan Video Background</button>
+          <button class="btn-add" style="margin-top:0.5rem;background:rgba(220,38,38,0.3);color:#f87171;border:1px solid rgba(220,38,38,0.3)" onclick="removeVideo()">🗑 Hapus Video</button>
+        </div>
+
+        <div style="margin-top:1rem;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:8px;font-size:0.8rem;color:rgba(255,255,255,0.3)">
+          💡 Tips: Video loop singkat 10–20 detik tanpa audio sangat efektif untuk background website sekolah.
+        </div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">Teks Hero</div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Tagline (contoh: Berprestasi • Mandiri • Kreatif)</label>
+          <input type="text" class="admin-form-input" id="adminTagline" value="For The Brighter Future">
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Deskripsi Hero</label>
+          <textarea class="admin-form-textarea" id="adminHeroDesc"></textarea>
+        </div>
+        <button class="btn-add" onclick="saveHeroText()">💾 Simpan Teks Hero</button>
+      </div>
+    </div>
+
+    <!-- BERITA -->
+    <div class="admin-section" id="admin-berita">
+      <div class="admin-title">📰 Kelola Berita</div>
+      <button class="btn-add" onclick="openBeritaForm()">+ Tambah Berita Baru</button>
+      <div class="admin-grid" id="adminBeritaList"></div>
+    </div>
+
+    <!-- EKSKUL -->
+    <div class="admin-section" id="admin-ekskul">
+      <div class="admin-title">⚽ Kelola Ekstrakurikuler</div>
+      <button class="btn-add" onclick="openEkskulForm()">+ Tambah Ekskul Baru</button>
+      <div class="admin-grid" id="adminEkskulList"></div>
+    </div>
+
+    <!-- GALERI -->
+    <div class="admin-section" id="admin-galeri">
+      <div class="admin-title">🖼 Kelola Galeri</div>
+      <div class="admin-card">
+        <div class="admin-card-title">Upload Media Galeri</div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Keterangan</label>
+          <input type="text" class="admin-form-input" id="galeriCaption" placeholder="Contoh: Kegiatan Upacara Bendera 2024">
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem">
+          <button class="btn-add" style="margin:0;flex:1" onclick="setGaleriMode('foto')">📷 Upload Foto</button>
+          <button class="btn-add" style="margin:0;flex:1;background:#7c3aed" onclick="setGaleriMode('video')">🎬 Upload Video</button>
+        </div>
+        <!-- Foto -->
+        <div id="galeriUploadFoto">
+          <div class="admin-upload-area" onclick="document.getElementById('uploadGaleri').click()">
+            <input type="file" id="uploadGaleri" accept="image/*" multiple onchange="handleGaleriMultiUpload(this)">
+            📷 Klik untuk pilih foto (maks 10MB)
+          </div>
+          <div id="previewGaleri" class="multi-preview-grid" style="margin-top:0.8rem"></div><div id="galeriCount" class="upload-count-badge" style="display:none"></div>
+        </div>
+        <!-- Video -->
+        <div id="galeriUploadVideo" style="display:none">
+          <div class="admin-upload-area" onclick="document.getElementById('uploadGaleriVideo').click()">
+            <input type="file" id="uploadGaleriVideo" accept="video/mp4,video/webm" onchange="handleGaleriVideoUpload(this)">
+            🎬 Klik untuk pilih video (MP4/WebM, maks 100MB)
+          </div>
+          <video id="previewGaleriVideo" style="display:none;max-width:100%;margin-top:1rem;border-radius:8px;max-height:200px" controls muted></video>
+        </div>
+        <button class="btn-add" style="margin-top:1rem" onclick="saveGaleri()">💾 Simpan ke Galeri</button>
+      </div>
+      <div class="admin-grid" id="adminGaleriList" style="margin-top:1rem"></div>
+    </div>
+
+    <!-- GURU -->
+    <div class="admin-section" id="admin-guru">
+      <div class="admin-title">👨‍🏫 Kelola Guru & Kepala Sekolah</div>
+      <button class="btn-add" onclick="openGuruForm()">+ Tambah Guru Baru</button>
+      <div class="admin-grid" id="adminGuruList"></div>
+    </div>
+
+    <!-- PROFIL -->
+    <div class="admin-section" id="admin-profil">
+      <div class="admin-title">🏫 Edit Profil Sekolah</div>
+      <div class="admin-card">
+        <div class="admin-card-title">Visi & Misi</div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Visi Sekolah</label>
+          <textarea class="admin-form-textarea" id="adminVisi"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Misi (satu per baris)</label>
+          <textarea class="admin-form-textarea" id="adminMisi" style="min-height:150px"></textarea>
+        </div>
+        <button class="btn-add" onclick="saveVisiMisi()">💾 Simpan Visi & Misi</button>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-title">Deskripsi & Tujuan</div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Tentang Sekolah</label>
+          <textarea class="admin-form-textarea" id="adminTentang" style="min-height:120px"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Tujuan Pendidikan (satu per baris)</label>
+          <textarea class="admin-form-textarea" id="adminTujuan" style="min-height:150px"></textarea>
+        </div>
+        <button class="btn-add" onclick="saveProfil()">💾 Simpan Profil</button>
+      </div>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="admin-section" id="admin-password">
+      <div class="admin-title">🔑 Ubah Password Admin</div>
+      <div class="admin-card" style="max-width:400px">
+        <div id="passAlert"></div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Password Lama</label>
+          <input type="password" class="admin-form-input" id="passLama" placeholder="••••••••">
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label class="admin-form-label">Password Baru</label>
+          <input type="password" class="admin-form-input" id="passBaru" placeholder="Min. 8 karakter">
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem">
+          <label class="admin-form-label">Konfirmasi Password Baru</label>
+          <input type="password" class="admin-form-input" id="passKonfirm" placeholder="Ulangi password baru">
+        </div>
+        <button class="btn-add" onclick="changePassword()">🔑 Ubah Password</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- ADMIN FORM MODALS (di dalam admin panel) -->
+<div class="admin-modal-overlay" id="beritaModal">
+  <div class="admin-modal">
+    <button class="modal-close" onclick="closeModal('beritaModal')">✕</button>
+    <div class="modal-title" id="beritaModalTitle">Tambah Berita</div>
+    <input type="hidden" id="beritaId">
+    <div class="form-group">
+      <label class="form-label">Judul Berita</label>
+      <input type="text" class="form-input" id="beritaJudul" placeholder="Judul berita...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Isi / Ringkasan</label>
+      <textarea class="form-textarea" id="beritaIsi" placeholder="Tulis isi berita..." style="min-height:120px"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Media Berita</label>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem">
+        <button type="button" class="btn-submit" style="flex:1;padding:6px;font-size:0.82rem;background:var(--hijau)" onclick="setMediaMode('berita','foto')">📷 Foto</button>
+        <button type="button" class="btn-submit" style="flex:1;padding:6px;font-size:0.82rem;background:#7c3aed" onclick="setMediaMode('berita','video')">🎬 Video</button>
+      </div>
+      <!-- Foto -->
+      <div id="beritaFotoSection">
+        <div class="upload-area" onclick="document.getElementById('beritaFoto').click()">
+          <input type="file" id="beritaFoto" accept="image/*" multiple onchange="previewMultiImg(this,'beritaFotoPreview','berita')">
+          📷 Klik untuk pilih foto (bisa pilih lebih dari satu)
+        </div>
+        <div id="beritaFotoPreview" class="multi-preview-grid"></div><div id="beritaFotoCount" class="upload-count-badge" style="display:none"></div>
+        <p class="form-hint" id="beritaFotoHint">Kosongkan jika tidak ingin mengubah</p>
+      </div>
+      <!-- Video -->
+      <div id="beritaVideoSection" style="display:none">
+        <div class="upload-area" onclick="document.getElementById('beritaVideo').click()">
+          <input type="file" id="beritaVideo" accept="video/mp4,video/webm" onchange="previewVideo(this,'beritaVideoPreview')">
+          🎬 Klik untuk upload video berita (MP4/WebM, maks 100MB)
+        </div>
+        <video id="beritaVideoPreview" style="display:none;width:100%;border-radius:8px;margin-top:0.5rem;max-height:180px" controls muted></video>
+        <p class="form-hint">Kosongkan jika tidak ingin mengubah</p>
+      </div>
+    </div>
+    <button class="btn-submit" onclick="saveBerita()" id="btnSaveBerita">💾 Simpan Berita</button>
+  </div>
+</div>
+<div class="admin-modal-overlay" id="ekskulModal">
+  <div class="admin-modal">
+    <button class="modal-close" onclick="closeModal('ekskulModal')">✕</button>
+    <div class="modal-title" id="ekskulModalTitle">Tambah Ekstrakurikuler</div>
+    <input type="hidden" id="ekskulId">
+    <div class="form-group">
+      <label class="form-label">Nama Ekskul</label>
+      <input type="text" class="form-input" id="ekskulNama" placeholder="Contoh: Pramuka, PMR, OSIS...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Deskripsi</label>
+      <textarea class="form-textarea" id="ekskulDesc" placeholder="Deskripsi ekskul..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Hari/Jadwal</label>
+      <input type="text" class="form-input" id="ekskulJadwal" placeholder="Contoh: Setiap Jumat, 14.00–16.00">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Media Kegiatan</label>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem">
+        <button type="button" class="btn-submit" style="flex:1;padding:6px;font-size:0.82rem;background:var(--hijau)" onclick="setMediaMode('ekskul','foto')">📷 Foto</button>
+        <button type="button" class="btn-submit" style="flex:1;padding:6px;font-size:0.82rem;background:#7c3aed" onclick="setMediaMode('ekskul','video')">🎬 Video</button>
+      </div>
+      <!-- Foto -->
+      <div id="ekskulFotoSection">
+        <div class="upload-area" onclick="document.getElementById('ekskulFoto').click()">
+          <input type="file" id="ekskulFoto" accept="image/*" multiple onchange="previewMultiImg(this,'ekskulFotoPreview','ekskul')">
+          📷 Klik untuk pilih foto kegiatan (bisa pilih lebih dari satu)
+        </div>
+        <div id="ekskulFotoPreview" class="multi-preview-grid"></div><div id="ekskulFotoCount" class="upload-count-badge" style="display:none"></div>
+      </div>
+      <!-- Video -->
+      <div id="ekskulVideoSection" style="display:none">
+        <div class="upload-area" onclick="document.getElementById('ekskulVideo').click()">
+          <input type="file" id="ekskulVideo" accept="video/mp4,video/webm" onchange="previewVideo(this,'ekskulVideoPreview')">
+          🎬 Klik untuk upload video kegiatan (MP4/WebM, maks 100MB)
+        </div>
+        <video id="ekskulVideoPreview" style="display:none;width:100%;border-radius:8px;margin-top:0.5rem;max-height:180px" controls muted></video>
+        <p class="form-hint">Kosongkan jika tidak ingin mengubah</p>
+      </div>
+    </div>
+    <button class="btn-submit" onclick="saveEkskul()" id="btnSaveEkskul">💾 Simpan Ekskul</button>
+  </div>
+</div>
+<div class="admin-modal-overlay" id="guruModal">
+  <div class="admin-modal">
+    <button class="modal-close" onclick="closeModal('guruModal')">✕</button>
+    <div class="modal-title" id="guruModalTitle">Tambah Guru</div>
+    <input type="hidden" id="guruId">
+    <div class="form-group">
+      <label class="form-label">Nama Lengkap</label>
+      <input type="text" class="form-input" id="guruNama" placeholder="Nama guru...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mata Pelajaran / Bidang</label>
+      <input type="text" class="form-input" id="guruMapel" placeholder="Contoh: Matematika, B. Indonesia...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Jabatan</label>
+      <select class="form-select" id="guruJabatan">
+        <option value="Guru">Guru</option>
+        <option value="Kepala Sekolah">Kepala Sekolah</option>
+        <option value="Wakil Kepala Sekolah">Wakil Kepala Sekolah</option>
+        <option value="Staff TU">Staff TU</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Foto Profil</label>
+      <div class="upload-area" onclick="document.getElementById('guruFoto').click()">
+        <input type="file" id="guruFoto" accept="image/*" onchange="previewImg(this,'guruFotoPreview')">
+        📷 Klik untuk upload foto (rekomendasi: 300x300px)
+      </div>
+      <img id="guruFotoPreview" src="" class="upload-preview" style="display:none;border-radius:50%;width:100px;height:100px;object-fit:cover">
+    </div>
+    <button class="btn-submit" onclick="saveGuru()" id="btnSaveGuru">💾 Simpan Data Guru</button>
+  </div>
+</div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FORM MODALS -->
+
+
+
+
+
+
+<script>
+// ============================================================
+// ⚙️ KONFIGURASI — EDIT BAGIAN INI SESUAI AKUN ANDA
+// ============================================================
+const CONFIG = {
+  // Supabase (dari https://supabase.com → Project Settings → API)
+  SUPABASE_URL: 'https://upnxnrejizqhmlhtkwlg.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwbnhucmVqaXpxaG1saHRrd2xnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNTk4OTgsImV4cCI6MjA4NzgzNTg5OH0.iN2YaDGEjBll9w2jee84rZSuxs8IYVlhGVCwM_MD3G0',
+  
+  // Cloudinary (dari https://cloudinary.com → Dashboard)
+  CLOUDINARY_CLOUD_NAME: 'ddiwgrbz9',
+  CLOUDINARY_UPLOAD_PRESET: 'sma_alfiil_preset', // buat unsigned preset di Cloudinary
+  
+  // Admin credentials (tersimpan di Supabase, default awal di sini)
+  ADMIN_DEFAULT_USER: 'admin',
+  ADMIN_DEFAULT_PASS: 'alfiil2024'
+};
+// ============================================================
+
+// Init Supabase
+const { createClient } = supabase;
+let sb;
+try {
+  sb = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+} catch(e) {
+  console.warn('Supabase belum dikonfigurasi');
+}
+
+// State
+let isLoggedIn = false;
+let tempUpload = { logo: null, bg: null, galeri: null };
+let editingBeritaImg = null;
+let editingBeritaVideo = null;
+let editingEkskulImg = null;
+let editingEkskulVideo = null;
+let editingGuruImg = null;
+let galeriMode = 'foto';
+let beritaMediaMode = 'foto';
+let ekskulMediaMode = 'foto';
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadAll();
+  checkSupabaseStatus();
+});
+
+async function loadAll() {
+  await Promise.all([
+    loadBerita(),
+    loadEkskul(),
+    loadGaleri(),
+    loadGuru(),
+    loadProfil(),
+    loadSettings()
+  ]);
+  updateStats();
+}
+
+async function checkSupabaseStatus() {
+  const el = document.getElementById('supabaseStatus');
+  if (!sb || CONFIG.SUPABASE_URL.includes('YOUR_PROJECT')) {
+    el.textContent = '❌ Belum dikonfigurasi — Edit CONFIG di script';
+    el.style.color = '#ef4444';
+    return;
+  }
+  try {
+    const { error } = await sb.from('settings').select('id').limit(1);
+    if (error) throw error;
+    el.textContent = '✅ Terhubung';
+    el.style.color = '#22c55e';
+  } catch {
+    el.textContent = '❌ Gagal — Cek URL & Key';
+    el.style.color = '#ef4444';
+  }
+}
+
+// ============================================================
+// SUPABASE HELPERS
+// ============================================================
+async function dbSelect(table, order = 'created_at') {
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb.from(table).select('*').order(order, { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error(`Error select ${table}:`, e);
+    return [];
+  }
+}
+
+async function dbInsert(table, obj) {
+  if (!sb) throw new Error('Supabase not configured');
+  const { data, error } = await sb.from(table).insert([obj]).select().single();
+  if (error) throw error;
+  return data;
+}
+
+async function dbUpdate(table, id, obj) {
+  if (!sb) throw new Error('Supabase not configured');
+  const { data, error } = await sb.from(table).update(obj).eq('id', id).select().single();
+  if (error) throw error;
+  return data;
+}
+
+async function dbDelete(table, id) {
+  if (!sb) throw new Error('Supabase not configured');
+  const { error } = await sb.from(table).delete().eq('id', id);
+  if (error) throw error;
+}
+
+async function dbUpsert(table, obj, key = 'key') {
+  if (!sb) throw new Error('Supabase not configured');
+  const { data, error } = await sb.from(table).upsert([obj], { onConflict: key }).select().single();
+  if (error) throw error;
+  return data;
+}
+
+// ============================================================
+// CLOUDINARY UPLOAD
+// ============================================================
+async function uploadToCloudinary(file) {
+  if (CONFIG.CLOUDINARY_CLOUD_NAME === 'YOUR_CLOUD_NAME') {
+    showToast('⚠️ Cloudinary belum dikonfigurasi. Foto tidak tersimpan.', true);
+    return null;
+  }
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CONFIG.CLOUDINARY_UPLOAD_PRESET);
+  fd.append('folder', 'sma_alfiil/images');
+  
+  const res = await fetch('https://api.cloudinary.com/v1_1/' + CONFIG.CLOUDINARY_CLOUD_NAME + '/image/upload', {
+    method: 'POST', body: fd
+  });
+  if (!res.ok) throw new Error('Upload foto gagal');
+  const json = await res.json();
+  return json.secure_url;
+}
+
+async function uploadVideoToCloudinary(file) {
+  if (CONFIG.CLOUDINARY_CLOUD_NAME === 'YOUR_CLOUD_NAME') {
+    showToast('⚠️ Cloudinary belum dikonfigurasi.', true);
+    return null;
+  }
+  showToast('⏳ Mengupload video... (bisa beberapa menit)');
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CONFIG.CLOUDINARY_UPLOAD_PRESET);
+  fd.append('resource_type', 'video');
+  fd.append('folder', 'sma_alfiil/videos');
+  
+  const res = await fetch('https://api.cloudinary.com/v1_1/' + CONFIG.CLOUDINARY_CLOUD_NAME + '/video/upload', {
+    method: 'POST', body: fd
+  });
+  if (!res.ok) throw new Error('Upload video gagal — cek ukuran file (maks 100MB)');
+  const json = await res.json();
+  return json.secure_url;
+}
+
+// ============================================================
+// LOAD FUNCTIONS
+// ============================================================
+async function loadBerita() {
+  var rows = await dbSelect('berita', 'tanggal');
+  var grid = document.getElementById('newsGrid');
+  if (!rows.length) {
+    grid.innerHTML = '<div class="loading" style="color:var(--abu)">Belum ada berita.</div>';
+    return;
+  }
+
+  // Simpan ke cache untuk detail view
+  beritaAllCache = rows;
+
+  var html = '';
+  for (var i = 0; i < rows.length; i++) {
+    var b = rows[i];
+    var firstFoto = '';
+    if (b.foto) {
+      try {
+        var arr = JSON.parse(b.foto);
+        firstFoto = Array.isArray(arr) ? arr[0] : b.foto;
+      } catch(e) { firstFoto = b.foto; }
+    }
+    var mediaHtml = '';
+    if (b.video) {
+      mediaHtml = '<video src="' + b.video + '" class="news-img" style="width:100%;height:200px;object-fit:cover;display:block" muted playsinline loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>';
+    } else if (firstFoto) {
+      mediaHtml = '<img src="' + firstFoto + '" class="news-img" style="width:100%;height:200px;object-fit:cover;display:block" loading="lazy" alt="">';
+    } else {
+      mediaHtml = '<div class="news-img-placeholder">📰</div>';
+    }
+
+    // Simpan index ke data-index, bukan ID langsung (hindari masalah quote)
+    html += '<div class="news-card" data-bidx="' + i + '" style="position:relative;cursor:pointer">' +
+      mediaHtml +
+      '<div class="news-body">' +
+        '<div class="news-date">' + formatDate(b.tanggal || b.created_at) + '</div>' +
+        '<div class="news-title">' + escHtml(b.judul) + '</div>' +
+        '<div class="news-excerpt">' + escHtml((b.isi||'').substring(0,120)) + (b.isi && b.isi.length > 120 ? '...' : '') + '</div>' +
+        '<span class="news-more">Baca selengkapnya →</span>' +
+      '</div>' +
+    '</div>';
+  }
+  grid.innerHTML = html;
+  document.getElementById('statBerita').textContent = rows.length;
+
+  // Pasang event listener setelah HTML dirender
+  grid.querySelectorAll('.news-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      var idx = parseInt(this.getAttribute('data-bidx'));
+      openBeritaDetail(idx);
+    });
+  });
+}
+
+
+async function loadEkskul() {
+  const rows = await dbSelect('ekskul', 'nama');
+  const grid = document.getElementById('ekskulGrid');
+  if (!rows.length) {
+    grid.innerHTML = '<div class="loading" style="color:var(--abu)">Belum ada data ekskul.</div>';
+    return;
+  }
+  grid.innerHTML = rows.map(function(e) {
+    var media = '';
+    if (e.video) {
+      media = '<div style="position:relative"><video src="'+e.video+'" style="width:100%;height:180px;object-fit:cover;display:block" muted playsinline loop onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0"></video><div style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:8px">▶ Video</div></div>';
+    } else if (e.foto) {
+      var fotos = [];
+      try { fotos = JSON.parse(e.foto); if (!Array.isArray(fotos)) fotos = [e.foto]; } catch(err) { fotos = [e.foto]; }
+      if (fotos.length > 1) {
+        var sid = 'se_'+e.id;
+        media = '<div id="'+sid+'" style="position:relative;height:180px;overflow:hidden">' +
+          fotos.map(function(u,i){ return '<img src="'+u+'" style="position:absolute;inset:0;width:100%;height:180px;object-fit:cover;transition:opacity 0.4s;opacity:'+(i===0?1:0)+'" loading="lazy">'; }).join('') +
+          '<div style="position:absolute;bottom:5px;left:0;right:0;display:flex;justify-content:center;gap:3px">' +
+          fotos.map(function(_,i){ return '<div style="width:5px;height:5px;border-radius:50%;background:'+(i===0?'#fff':'rgba(255,255,255,0.5)')+';cursor:pointer" onclick="goSlide(&quot;'+sid+'&quot;,'+i+')"></div>'; }).join('') +
+          '</div><div style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:8px">📷 '+fotos.length+'</div></div>';
+      } else {
+        media = '<img src="'+fotos[0]+'" style="width:100%;height:180px;object-fit:cover;display:block" loading="lazy">';
+      }
+    } else {
+      media = '<div class="ekskul-img-placeholder">'+getEkskulEmoji(e.nama)+'</div>';
+    }
+    return '<div class="ekskul-card">' + media +
+      '<div class="ekskul-body">'+
+      '<div class="ekskul-name">'+escHtml(e.nama)+'</div>'+
+      '<div class="ekskul-desc">'+escHtml(e.deskripsi||'')+'</div>'+
+      (e.jadwal?'<span class="ekskul-badge">🕐 '+escHtml(e.jadwal)+'</span>':'')+
+      '</div></div>';
+  }).join('');
+  document.getElementById('statEkskul').textContent = rows.length;
+}
+
+async function loadGaleri() {
+  const rows = await dbSelect('galeri', 'created_at');
+  const grid = document.getElementById('galeriGrid');
+  if (!rows.length) {
+    grid.innerHTML = '<div class="loading" style="color:var(--abu)">Belum ada foto di galeri.</div>';
+    return;
+  }
+  grid.innerHTML = rows.map(function(g) {
+    var onclick = g.video ? "openLightboxVideo('" + g.video + "')" : "openLightbox('" + g.foto + "')";
+    var media = '';
+    if (g.video) {
+      media = '<video src="' + g.video + '" style="width:100%;height:100%;object-fit:cover" muted playsinline loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>' +
+              '<div style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.6);color:#fff;font-size:0.65rem;padding:2px 7px;border-radius:8px">▶ Video</div>';
+    } else if (g.foto) {
+      media = '<img src="' + g.foto + '" alt="' + escHtml(g.caption||'') + '" loading="lazy">';
+    } else {
+      media = '<div class="galeri-placeholder">🖼</div>';
+    }
+    return '<div class="galeri-item" onclick="' + onclick + '" style="position:relative">' +
+      media +
+      '<div class="galeri-overlay">' + (g.video ? '▶' : '🔍') + '</div>' +
+      '</div>';
+  }).join('');
+}
+
+async function loadGuru() {
+  const rows = await dbSelect('guru', 'jabatan');
+  const grid = document.getElementById('guruGrid');
+  if (!rows.length) {
+    grid.innerHTML = '<div class="loading" style="color:var(--abu)">Belum ada data guru.</div>';
+    return;
+  }
+  // Sort: Kepala Sekolah first
+  rows.sort((a,b) => {
+    if (a.jabatan === 'Kepala Sekolah') return -1;
+    if (b.jabatan === 'Kepala Sekolah') return 1;
+    return 0;
+  });
+  grid.innerHTML = rows.map(function(g) {
+    var foto = g.foto
+      ? '<img src="' + g.foto + '" alt="' + escHtml(g.nama) + '">'
+      : '👤';
+    return '<div class="guru-card">' +
+      '<div class="guru-photo">' + foto + '</div>' +
+      '<div class="guru-name">' + escHtml(g.nama) + '</div>' +
+      '<div class="guru-mapel">' + escHtml(g.mapel||'') + '</div>' +
+      '<div class="guru-role">' + escHtml(g.jabatan||'Guru') + '</div>' +
+      (g.jabatan === 'Kepala Sekolah' ? '<div><span class="kepsek-badge">Kepala Sekolah</span></div>' : '') +
+    '</div>';
+  }).join('');
+  document.getElementById('statGuru').textContent = rows.length;
+}
+
+async function loadProfil() {
+  const rows = await dbSelect('settings', 'key');
+  const map = {};
+  rows.forEach(r => map[r.key] = r.value);
+  
+  if (map.visi) document.getElementById('visiText').textContent = map.visi;
+  if (map.misi) {
+    const items = map.misi.split('\n').filter(s=>s.trim());
+    document.getElementById('misiList').innerHTML = items.map(m=>`<li>${escHtml(m.trim())}</li>`).join('');
+  }
+  if (map.tentang) document.getElementById('tentangText').textContent = map.tentang;
+  if (map.tujuan) {
+    const items = map.tujuan.split('\n').filter(s=>s.trim());
+    document.getElementById('tujuanList').innerHTML = items.map(t=>`<li>${escHtml(t.trim())}</li>`).join('');
+  }
+  if (map.tagline) {
+    document.getElementById('heroTagline').textContent = map.tagline;
+    const el = document.getElementById('adminTagline');
+    if (el) el.value = map.tagline;
+  }
+  if (map.hero_desc) {
+    document.getElementById('heroDesc').textContent = map.hero_desc;
+    const el = document.getElementById('adminHeroDesc');
+    if (el) el.value = map.hero_desc;
+  }
+  
+  // Populate admin fields if open
+  const visiEl = document.getElementById('adminVisi');
+  if (visiEl && map.visi) visiEl.value = map.visi;
+  const misiEl = document.getElementById('adminMisi');
+  if (misiEl && map.misi) misiEl.value = map.misi;
+  const tentEl = document.getElementById('adminTentang');
+  if (tentEl && map.tentang) tentEl.value = map.tentang;
+  const tujEl = document.getElementById('adminTujuan');
+  if (tujEl && map.tujuan) tujEl.value = map.tujuan;
+}
+
+async function loadSettings() {
+  const rows = await dbSelect('settings', 'key');
+  const map = {};
+  rows.forEach(r => map[r.key] = r.value);
+  
+  if (map.logo_url) {
+    updateLogo(map.logo_url);
+  }
+  if (map.bg_video_url) {
+    setHeroVideo(map.bg_video_url);
+  } else if (map.bg_url) {
+    const bg = document.getElementById('heroBg');
+    bg.style.backgroundImage = "url('" + map.bg_url + "')";
+    bg.classList.add('has-image');
+  }
+}
+
+function setHeroVideo(url) {
+  var vid = document.getElementById('heroBgVideo');
+  var bg = document.getElementById('heroBg');
+  vid.src = url;
+  vid.style.display = 'block';
+  vid.classList.add('active');
+  bg.style.backgroundImage = '';
+  bg.classList.remove('has-image');
+  vid.play().catch(function(){});
+}
+
+function removeHeroVideo() {
+  var vid = document.getElementById('heroBgVideo');
+  vid.src = '';
+  vid.style.display = 'none';
+  vid.classList.remove('active');
+}
+
+function updateLogo(url) {
+  // Nav logo
+  const navLogo = document.getElementById('navLogo');
+  navLogo.innerHTML = `<img src="${url}" alt="Logo SMA AL-FIIL">`;
+  // Hero logo
+  const heroWrap = document.getElementById('heroLogoWrap');
+  heroWrap.innerHTML = `<img src="${url}" alt="Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+}
+
+function updateStats() {
+  // already set in load functions
+}
+
+// ============================================================
+// ADMIN LOAD FOR PANEL
+// ============================================================
+async function adminLoadBerita() {
+  var rows = await dbSelect('berita', 'tanggal');
+  document.getElementById('dash-berita').textContent = rows.length;
+  var container = document.getElementById('adminBeritaList');
+  if (!rows.length) {
+    container.innerHTML = '<div style="color:rgba(255,255,255,0.3)">Belum ada berita</div>';
+    return;
+  }
+  var html = '';
+  rows.forEach(function(b) {
+    var firstFoto = '';
+    if (b.foto) { try { var a=JSON.parse(b.foto); firstFoto=Array.isArray(a)?a[0]:b.foto; } catch(e){ firstFoto=b.foto; } }
+    var thumb = b.video
+      ? '<video src="'+b.video+'" class="admin-item-img" muted playsinline style="object-fit:cover" onmouseenter="this.play()" onmouseleave="this.pause()"></video>'
+      : firstFoto ? '<img src="'+firstFoto+'" class="admin-item-img" alt="">'
+      : '<div class="admin-item-img" style="display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--hijau)">📰</div>';
+    html +=
+      '<div class="admin-item-card" data-id="'+escHtml(b.id)+'">' +
+        thumb +
+        (b.video?'<div style="color:var(--emas);font-size:0.72rem;margin-top:0.3rem">▶ Video</div>':'') +
+        '<div class="admin-item-title">'+escHtml(b.judul)+'</div>' +
+        '<div class="admin-item-sub">'+formatDate(b.tanggal||b.created_at)+'</div>' +
+        '<div class="admin-item-actions">' +
+          '<button class="btn-edit" data-action="edit" data-type="berita">✏ Edit</button>' +
+          '<button class="btn-del" data-action="del" data-type="berita">🗑 Hapus</button>' +
+        '</div>' +
+      '</div>';
+  });
+  container.innerHTML = html;
+  // Event delegation
+  container.querySelectorAll('button[data-action]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var card = this.closest('[data-id]');
+      var id = card.getAttribute('data-id');
+      var action = this.getAttribute('data-action');
+      if (action === 'edit') editBerita(id);
+      else if (action === 'del') delBerita(id);
+    });
+  });
+}
+
+async function adminLoadEkskul() {
+  var rows = await dbSelect('ekskul', 'nama');
+  document.getElementById('dash-ekskul').textContent = rows.length;
+  var container = document.getElementById('adminEkskulList');
+  if (!rows.length) {
+    container.innerHTML = '<div style="color:rgba(255,255,255,0.3)">Belum ada ekskul</div>';
+    return;
+  }
+  var html = '';
+  rows.forEach(function(e) {
+    var firstFoto = '';
+    if (e.foto) { try { var a=JSON.parse(e.foto); firstFoto=Array.isArray(a)?a[0]:e.foto; } catch(err){ firstFoto=e.foto; } }
+    var thumb = e.video
+      ? '<video src="'+e.video+'" class="admin-item-img" muted playsinline style="object-fit:cover" onmouseenter="this.play()" onmouseleave="this.pause()"></video>'
+      : firstFoto ? '<img src="'+firstFoto+'" class="admin-item-img" alt="">'
+      : '<div class="admin-item-img" style="display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--hijau)">'+getEkskulEmoji(e.nama)+'</div>';
+    html +=
+      '<div class="admin-item-card" data-id="'+escHtml(e.id)+'">' +
+        thumb +
+        (e.video?'<div style="color:var(--emas);font-size:0.72rem;margin-top:0.3rem">▶ Video</div>':'') +
+        '<div class="admin-item-title">'+escHtml(e.nama)+'</div>' +
+        '<div class="admin-item-sub">'+escHtml(e.jadwal||'')+'</div>' +
+        '<div class="admin-item-actions">' +
+          '<button class="btn-edit" data-action="edit" data-type="ekskul">✏ Edit</button>' +
+          '<button class="btn-del" data-action="del" data-type="ekskul">🗑 Hapus</button>' +
+        '</div>' +
+      '</div>';
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('button[data-action]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = this.closest('[data-id]').getAttribute('data-id');
+      var action = this.getAttribute('data-action');
+      if (action === 'edit') editEkskul(id);
+      else if (action === 'del') delEkskul(id);
+    });
+  });
+}
+
+async function adminLoadGaleri() {
+  var rows = await dbSelect('galeri', 'created_at');
+  document.getElementById('dash-galeri').textContent = rows.length;
+  var container = document.getElementById('adminGaleriList');
+  if (!rows.length) {
+    container.innerHTML = '<div style="color:rgba(255,255,255,0.3)">Belum ada media</div>';
+    return;
+  }
+  var html = '';
+  rows.forEach(function(g) {
+    var thumb = g.video
+      ? '<video src="'+g.video+'" class="admin-item-img" muted playsinline style="object-fit:cover" onmouseenter="this.play()" onmouseleave="this.pause()"></video>'
+      : g.foto ? '<img src="'+g.foto+'" class="admin-item-img" alt="'+escHtml(g.caption||'')+'">'
+      : '<div class="admin-item-img" style="display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--hijau)">🖼</div>';
+    html +=
+      '<div class="admin-item-card" data-id="'+escHtml(g.id)+'">' +
+        thumb +
+        (g.video?'<div style="color:var(--emas);font-size:0.72rem;margin-top:0.3rem">▶ Video</div>':'') +
+        '<div class="admin-item-title">'+escHtml(g.caption||'Tanpa Keterangan')+'</div>' +
+        '<div class="admin-item-actions">' +
+          '<button class="btn-del" data-action="del" data-type="galeri">🗑 Hapus</button>' +
+        '</div>' +
+      '</div>';
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('button[data-action]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = this.closest('[data-id]').getAttribute('data-id');
+      delGaleri(id);
+    });
+  });
+}
+
+async function adminLoadGuru() {
+  var rows = await dbSelect('guru', 'jabatan');
+  document.getElementById('dash-guru').textContent = rows.length;
+  var container = document.getElementById('adminGuruList');
+  if (!rows.length) {
+    container.innerHTML = '<div style="color:rgba(255,255,255,0.3)">Belum ada data guru</div>';
+    return;
+  }
+  rows.sort(function(a,b){ if(a.jabatan==='Kepala Sekolah') return -1; if(b.jabatan==='Kepala Sekolah') return 1; return 0; });
+  var html = '';
+  rows.forEach(function(g) {
+    var foto = g.foto
+      ? '<img src="'+g.foto+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--hijau-muda)">'
+      : '<div style="width:50px;height:50px;border-radius:50%;background:var(--hijau);display:flex;align-items:center;justify-content:center;font-size:1.3rem">👤</div>';
+    html +=
+      '<div class="admin-item-card" data-id="'+escHtml(g.id)+'">' +
+        '<div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem">' +
+          foto +
+          '<div>' +
+            '<div class="admin-item-title">'+escHtml(g.nama)+'</div>' +
+            '<div class="admin-item-sub">'+escHtml(g.mapel||'')+' — '+escHtml(g.jabatan||'Guru')+'</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="admin-item-actions">' +
+          '<button class="btn-edit" data-action="edit" data-type="guru">✏ Edit</button>' +
+          '<button class="btn-del" data-action="del" data-type="guru">🗑 Hapus</button>' +
+        '</div>' +
+      '</div>';
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('button[data-action]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = this.closest('[data-id]').getAttribute('data-id');
+      var action = this.getAttribute('data-action');
+      if (action === 'edit') editGuru(id);
+      else if (action === 'del') delGuru(id);
+    });
+  });
+}
+
+async function adminLoadProfil() {
+  const rows = await dbSelect('settings', 'key');
+  const map = {};
+  rows.forEach(r => map[r.key] = r.value);
+  const f = id => document.getElementById(id);
+  if (map.visi && f('adminVisi')) f('adminVisi').value = map.visi;
+  if (map.misi && f('adminMisi')) f('adminMisi').value = map.misi;
+  if (map.tentang && f('adminTentang')) f('adminTentang').value = map.tentang;
+  if (map.tujuan && f('adminTujuan')) f('adminTujuan').value = map.tujuan;
+  if (map.tagline && f('adminTagline')) f('adminTagline').value = map.tagline;
+  if (map.hero_desc && f('adminHeroDesc')) f('adminHeroDesc').value = map.hero_desc;
+}
+
+// ============================================================
+// SAVE FUNCTIONS
+// ============================================================
+async function saveBerita() {
+  const btn = document.getElementById('btnSaveBerita');
+  btn.disabled = true; btn.textContent = '⏳ Menyimpan...';
+  try {
+    const id = document.getElementById('beritaId').value;
+    const judul = document.getElementById('beritaJudul').value.trim();
+    const isi = document.getElementById('beritaIsi').value.trim();
+    if (!judul) throw new Error('Judul tidak boleh kosong');
+
+    const videoEl = document.getElementById('beritaVideo');
+    const videoFile = videoEl ? videoEl.files[0] : null;
+
+    let foto = editingBeritaImg || null;
+    let video = editingBeritaVideo || null;
+
+    if (videoFile) {
+      video = await uploadVideoToCloudinary(videoFile);
+      foto = null;
+    } else if (_multiFiles['berita'] && _multiFiles['berita'].length > 0) {
+      const urls = await uploadMultiplePhotos('berita');
+      if (urls.length > 0) {
+        let existing = [];
+        if (editingBeritaImg) {
+          try { existing = JSON.parse(editingBeritaImg); if (!Array.isArray(existing)) existing = [editingBeritaImg]; }
+          catch(e) { existing = [editingBeritaImg]; }
+        }
+        foto = existing.length > 0 ? JSON.stringify(existing.concat(urls)) : (urls.length === 1 ? urls[0] : JSON.stringify(urls));
+        video = null;
+      }
+    }
+
+    const obj = { judul, isi, foto, video, tanggal: new Date().toISOString() };
+    if (id) {
+      await dbUpdate('berita', id, obj);
+      showToast('✅ Berita berhasil diperbarui!');
+    } else {
+      await dbInsert('berita', obj);
+      showToast('✅ Berita berhasil ditambahkan!');
+    }
+    clearMultiPhotos('berita');
+    closeModal('beritaModal');
+    await loadBerita();
+    await adminLoadBerita();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  }
+  btn.disabled = false; btn.textContent = '💾 Simpan Berita';
+}
+
+
+async function saveEkskul() {
+  const btn = document.getElementById('btnSaveEkskul');
+  btn.disabled = true; btn.textContent = '⏳ Menyimpan...';
+  try {
+    const id = document.getElementById('ekskulId').value;
+    const nama = document.getElementById('ekskulNama').value.trim();
+    const deskripsi = document.getElementById('ekskulDesc').value.trim();
+    const jadwal = document.getElementById('ekskulJadwal').value.trim();
+    if (!nama) throw new Error('Nama ekskul tidak boleh kosong');
+
+    const videoEl = document.getElementById('ekskulVideo');
+    const videoFile = videoEl ? videoEl.files[0] : null;
+
+    let foto = editingEkskulImg || null;
+    let video = editingEkskulVideo || null;
+
+    if (videoFile) {
+      // Upload video
+      video = await uploadVideoToCloudinary(videoFile);
+      foto = null;
+    } else if (_multiFiles['ekskul'] && _multiFiles['ekskul'].length > 0) {
+      // Upload foto (bisa banyak) via _multiFiles
+      const urls = await uploadMultiplePhotos('ekskul');
+      if (urls.length > 0) {
+        // Gabung dengan foto lama jika mode edit
+        let existing = [];
+        if (editingEkskulImg) {
+          try { existing = JSON.parse(editingEkskulImg); if (!Array.isArray(existing)) existing = [editingEkskulImg]; }
+          catch(e) { existing = [editingEkskulImg]; }
+        }
+        foto = existing.length > 0 ? JSON.stringify(existing.concat(urls)) : (urls.length === 1 ? urls[0] : JSON.stringify(urls));
+        video = null;
+      }
+    }
+    // Jika tidak ada file baru dipilih, pakai foto/video lama (editingEkskulImg/Video)
+
+    const obj = { nama, deskripsi, jadwal, foto, video };
+    if (id) {
+      await dbUpdate('ekskul', id, obj);
+      showToast('✅ Ekskul berhasil diperbarui!');
+    } else {
+      await dbInsert('ekskul', obj);
+      showToast('✅ Ekskul berhasil ditambahkan!');
+    }
+    clearMultiPhotos('ekskul');
+    closeModal('ekskulModal');
+    await loadEkskul();
+    await adminLoadEkskul();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  }
+  btn.disabled = false; btn.textContent = '💾 Simpan Ekskul';
+}
+
+
+async function saveGaleri() {
+  const videoFile = document.getElementById('uploadGaleriVideo').files[0];
+  const caption = document.getElementById('galeriCaption').value.trim();
+  const multiFotos = _multiFiles['galeri'] || [];
+  
+  if (!multiFotos.length && !videoFile) return showToast('❌ Pilih foto atau video terlebih dahulu', true);
+  
+  try {
+    if (videoFile) {
+      // Upload video tunggal
+      const video = await uploadVideoToCloudinary(videoFile);
+      if (!video) return;
+      await dbInsert('galeri', { foto: null, video, caption });
+      showToast('✅ Video berhasil ditambahkan ke galeri!');
+    } else {
+      // Upload semua foto sekaligus
+      const total = multiFotos.length;
+      showToast('⏳ Mengupload ' + total + ' foto ke galeri...');
+      let berhasil = 0;
+      for (let i = 0; i < multiFotos.length; i++) {
+        showToast('⏳ Upload foto ' + (i+1) + ' dari ' + total + '...');
+        const url = await uploadToCloudinary(multiFotos[i]);
+        if (url) {
+          await dbInsert('galeri', { foto: url, video: null, caption: caption || '' });
+          berhasil++;
+        }
+      }
+      showToast('✅ ' + berhasil + ' dari ' + total + ' foto berhasil ditambahkan ke galeri!');
+    }
+    
+    // Reset
+    clearMultiPhotos('galeri');
+    document.getElementById('galeriCaption').value = '';
+    document.getElementById('uploadGaleriVideo').value = '';
+    await loadGaleri();
+    await adminLoadGaleri();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  }
+}
+
+async function saveGuru() {
+  const btn = document.getElementById('btnSaveGuru');
+  btn.disabled = true; btn.textContent = '⏳ Menyimpan...';
+  try {
+    const id = document.getElementById('guruId').value;
+    const nama = document.getElementById('guruNama').value.trim();
+    const mapel = document.getElementById('guruMapel').value.trim();
+    const jabatan = document.getElementById('guruJabatan').value;
+    const fotoFile = document.getElementById('guruFoto').files[0];
+    if (!nama) throw new Error('Nama tidak boleh kosong');
+    
+    let foto = editingGuruImg;
+    if (fotoFile) foto = await uploadToCloudinary(fotoFile);
+    
+    const obj = { nama, mapel, jabatan, foto };
+    if (id) {
+      await dbUpdate('guru', id, obj);
+      showToast('✅ Data guru berhasil diperbarui!');
+    } else {
+      await dbInsert('guru', obj);
+      showToast('✅ Data guru berhasil ditambahkan!');
+    }
+    closeModal('guruModal');
+    await loadGuru();
+    await adminLoadGuru();
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
+  }
+  btn.disabled = false; btn.textContent = '💾 Simpan Data Guru';
+}
+
+async function saveVisiMisi() {
+  try {
+    const visi = document.getElementById('adminVisi').value.trim();
+    const misi = document.getElementById('adminMisi').value.trim();
+    await dbUpsert('settings', { key: 'visi', value: visi });
+    await dbUpsert('settings', { key: 'misi', value: misi });
+    showToast('✅ Visi & Misi berhasil disimpan!');
+    await loadProfil();
+  } catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function saveProfil() {
+  try {
+    const tentang = document.getElementById('adminTentang').value.trim();
+    const tujuan = document.getElementById('adminTujuan').value.trim();
+    await dbUpsert('settings', { key: 'tentang', value: tentang });
+    await dbUpsert('settings', { key: 'tujuan', value: tujuan });
+    showToast('✅ Profil sekolah berhasil disimpan!');
+    await loadProfil();
+  } catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function saveHeroText() {
+  try {
+    const tagline = document.getElementById('adminTagline').value.trim();
+    const desc = document.getElementById('adminHeroDesc').value.trim();
+    await dbUpsert('settings', { key: 'tagline', value: tagline });
+    await dbUpsert('settings', { key: 'hero_desc', value: desc });
+    document.getElementById('heroTagline').textContent = tagline;
+    document.getElementById('heroDesc').textContent = desc;
+    showToast('✅ Teks hero berhasil disimpan!');
+  } catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function saveHero(type) {
+  if (type === 'video') {
+    // Handle video upload
+    const fileInput = document.getElementById('uploadBgVideo');
+    const urlInput = document.getElementById('bgVideoUrl').value.trim();
+    
+    if (fileInput.files[0]) {
+      showToast('⏳ Mengupload video ke Cloudinary...');
+      try {
+        // Upload video ke Cloudinary
+        const fd = new FormData();
+        fd.append('file', fileInput.files[0]);
+        fd.append('upload_preset', CONFIG.CLOUDINARY_UPLOAD_PRESET);
+        fd.append('resource_type', 'video');
+        fd.append('folder', 'sma_alfiil/videos');
+        
+        const res = await fetch('https://api.cloudinary.com/v1_1/' + CONFIG.CLOUDINARY_CLOUD_NAME + '/video/upload', {
+          method:'POST', body:fd
+        });
+        if (!res.ok) throw new Error('Upload video gagal');
+        const json = await res.json();
+        const videoUrl = json.secure_url;
+        
+        await dbUpsert('settings', { key: 'bg_video_url', value: videoUrl });
+        setHeroVideo(videoUrl);
+        showToast('✅ Video background berhasil disimpan!');
+      } catch(e) { showToast('❌ ' + e.message, true); }
+    } else if (urlInput) {
+      try {
+        await dbUpsert('settings', { key: 'bg_video_url', value: urlInput });
+        setHeroVideo(urlInput);
+        showToast('✅ Video background dari URL berhasil disimpan!');
+      } catch(e) { showToast('❌ ' + e.message, true); }
+    } else {
+      showToast('❌ Pilih file video atau masukkan URL', true);
+    }
+    return;
+  }
+  
+  const file = tempUpload[type];
+  if (!file) return showToast('❌ Pilih file terlebih dahulu', true);
+  showToast('⏳ Mengupload...');
+  try {
+    const url = await uploadToCloudinary(file);
+    if (!url) return;
+    const key = type === 'logo' ? 'logo_url' : 'bg_url';
+    await dbUpsert('settings', { key, value: url });
+    if (type === 'logo') {
+      updateLogo(url);
+      showToast('✅ Logo berhasil diperbarui!');
+    } else {
+      // Hapus video jika ada
+      await dbUpsert('settings', { key: 'bg_video_url', value: '' });
+      removeHeroVideo();
+      const bg = document.getElementById('heroBg');
+      bg.style.backgroundImage = "url('" + url + "')";
+      bg.classList.add('has-image');
+      showToast('✅ Background berhasil diperbarui!');
+    }
+  } catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function removeVideo() {
+  if (!confirm('Hapus video background?')) return;
+  try {
+    await dbUpsert('settings', { key: 'bg_video_url', value: '' });
+    removeHeroVideo();
+    showToast('✅ Video background dihapus');
+  } catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+// ============================================================
+// DELETE FUNCTIONS
+// ============================================================
+async function delBerita(id) {
+  if (!confirm('Hapus berita ini?')) return;
+  try { await dbDelete('berita', id); showToast('✅ Berita dihapus'); await loadBerita(); await adminLoadBerita(); }
+  catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function delEkskul(id) {
+  if (!confirm('Hapus ekskul ini?')) return;
+  try { await dbDelete('ekskul', id); showToast('✅ Ekskul dihapus'); await loadEkskul(); await adminLoadEkskul(); }
+  catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function delGaleri(id) {
+  if (!confirm('Hapus foto ini?')) return;
+  try { await dbDelete('galeri', id); showToast('✅ Foto dihapus'); await loadGaleri(); await adminLoadGaleri(); }
+  catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+async function delGuru(id) {
+  if (!confirm('Hapus data guru ini?')) return;
+  try { await dbDelete('guru', id); showToast('✅ Data guru dihapus'); await loadGuru(); await adminLoadGuru(); }
+  catch(e) { showToast('❌ ' + e.message, true); }
+}
+
+// ============================================================
+// EDIT FUNCTIONS
+// ============================================================
+let beritaCache = [], ekskulCache = [], guruCache = [];
+
+async function editBerita(id) {
+  const rows = await dbSelect('berita');
+  beritaCache = rows;
+  const b = rows.find(x => x.id == id);
+  if (!b) return;
+  document.getElementById('beritaId').value = b.id;
+  document.getElementById('beritaModalTitle').textContent = 'Edit Berita';
+  document.getElementById('beritaJudul').value = b.judul;
+  document.getElementById('beritaIsi').value = b.isi||'';
+  editingBeritaImg = b.foto;
+  editingBeritaVideo = b.video;
+  if (b.video) {
+    setMediaMode('berita', 'video');
+    const prev = document.getElementById('beritaVideoPreview');
+    prev.src = b.video; prev.style.display = 'block';
+  } else if (b.foto) {
+    setMediaMode('berita', 'foto');
+    // Tampilkan foto pertama sebagai preview (bisa array JSON)
+    var previewFoto = b.foto;
+    try { var arr = JSON.parse(b.foto); if (Array.isArray(arr) && arr.length) previewFoto = arr[0]; } catch(e){}
+    var prev = document.getElementById('beritaFotoPreview');
+    prev.innerHTML = '<div class="multi-preview-item"><img src="' + previewFoto + '" style="width:100%;height:100%;object-fit:cover"></div>';
+    var cnt = document.getElementById('beritaFotoCount');
+    if (cnt) { cnt.style.display='inline-block'; cnt.textContent='Foto tersimpan'; }
+  }
+  document.getElementById('beritaFotoHint').textContent = 'Kosongkan jika tidak ingin mengubah';
+  openModal('beritaModal');
+}
+
+async function editEkskul(id) {
+  const rows = await dbSelect('ekskul');
+  ekskulCache = rows;
+  const e = rows.find(x => x.id == id);
+  if (!e) return;
+  document.getElementById('ekskulId').value = e.id;
+  document.getElementById('ekskulModalTitle').textContent = 'Edit Ekstrakurikuler';
+  document.getElementById('ekskulNama').value = e.nama;
+  document.getElementById('ekskulDesc').value = e.deskripsi||'';
+  document.getElementById('ekskulJadwal').value = e.jadwal||'';
+  editingEkskulImg = e.foto;
+  editingEkskulVideo = e.video;
+  if (e.video) {
+    setMediaMode('ekskul', 'video');
+    const prev = document.getElementById('ekskulVideoPreview');
+    prev.src = e.video; prev.style.display = 'block';
+  } else if (e.foto) {
+    setMediaMode('ekskul', 'foto');
+    const prev = document.getElementById('ekskulFotoPreview');
+    prev.src = e.foto; prev.style.display = 'block';
+  }
+  openModal('ekskulModal');
+}
+
+async function editGuru(id) {
+  const rows = await dbSelect('guru');
+  guruCache = rows;
+  const g = rows.find(x => x.id == id);
+  if (!g) return;
+  document.getElementById('guruId').value = g.id;
+  document.getElementById('guruModalTitle').textContent = 'Edit Guru';
+  document.getElementById('guruNama').value = g.nama;
+  document.getElementById('guruMapel').value = g.mapel||'';
+  document.getElementById('guruJabatan').value = g.jabatan||'Guru';
+  editingGuruImg = g.foto;
+  if (g.foto) {
+    const prev = document.getElementById('guruFotoPreview');
+    prev.src = g.foto; prev.style.display = 'block;border-radius:50%;width:100px;height:100px';
+    prev.style.borderRadius = '50%';
+    prev.style.width = '100px'; prev.style.height = '100px';
+  }
+  openModal('guruModal');
+}
+
+// ============================================================
+// FORM HELPERS
+// ============================================================
+function openBeritaForm() {
+  document.getElementById('beritaId').value = '';
+  document.getElementById('beritaModalTitle').textContent = 'Tambah Berita';
+  document.getElementById('beritaJudul').value = '';
+  document.getElementById('beritaIsi').value = '';
+  document.getElementById('beritaFoto').value = '';
+  clearMultiPhotos('berita');
+  document.getElementById('beritaFotoPreview').style.display = 'none';
+  editingBeritaImg = null;
+  openModal('beritaModal');
+}
+
+function openEkskulForm() {
+  document.getElementById('ekskulId').value = '';
+  document.getElementById('ekskulModalTitle').textContent = 'Tambah Ekstrakurikuler';
+  document.getElementById('ekskulNama').value = '';
+  document.getElementById('ekskulDesc').value = '';
+  document.getElementById('ekskulJadwal').value = '';
+  document.getElementById('ekskulFoto').value = '';
+  clearMultiPhotos('ekskul');
+  document.getElementById('ekskulFotoPreview').style.display = 'none';
+  editingEkskulImg = null;
+  openModal('ekskulModal');
+}
+
+function openGuruForm() {
+  document.getElementById('guruId').value = '';
+  document.getElementById('guruModalTitle').textContent = 'Tambah Guru';
+  document.getElementById('guruNama').value = '';
+  document.getElementById('guruMapel').value = '';
+  document.getElementById('guruJabatan').value = 'Guru';
+  document.getElementById('guruFoto').value = '';
+  document.getElementById('guruFotoPreview').style.display = 'none';
+  editingGuruImg = null;
+  openModal('guruModal');
+}
+
+function handleUpload(type, input) {
+  const file = input.files[0];
+  if (!file) return;
+  tempUpload[type] = file;
+  const previewId = type === 'logo' ? 'previewLogo' : 'previewBg';
+  const prev = document.getElementById(previewId);
+  const reader = new FileReader();
+  reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
+  reader.readAsDataURL(file);
+}
+
+function handleVideoUpload(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var prev = document.getElementById('previewBgVideo');
+  var url = URL.createObjectURL(file);
+  prev.src = url;
+  prev.style.display = 'block';
+  prev.play();
+}
+
+function setBgMode(mode) {
+  var imgSec = document.getElementById('bgImageSection');
+  var vidSec = document.getElementById('bgVideoSection');
+  var btnImg = document.getElementById('btnModeImg');
+  var btnVid = document.getElementById('btnModeVid');
+  if (mode === 'image') {
+    imgSec.style.display = 'block';
+    vidSec.style.display = 'none';
+    btnImg.style.opacity = '1';
+    btnVid.style.opacity = '0.5';
+  } else {
+    imgSec.style.display = 'none';
+    vidSec.style.display = 'block';
+    btnImg.style.opacity = '0.5';
+    btnVid.style.opacity = '1';
+  }
+}
+
+function handleGaleriUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const prev = document.getElementById('previewGaleri');
+  const reader = new FileReader();
+  reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
+  reader.readAsDataURL(file);
+}
+
+function previewImg(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const prev = document.getElementById(previewId);
+  const reader = new FileReader();
+  reader.onload = e => { prev.src = e.target.result; prev.style.display = 'block'; };
+  reader.readAsDataURL(file);
+}
+
+// ============================================================
+// MULTI FOTO - state per fitur
+// ============================================================
+var _multiFiles = { berita: [], ekskul: [], galeri: [] };
+
+function previewMultiImg(input, previewId, feature) {
+  var files = Array.from(input.files);
+  if (!files.length) return;
+  
+  // Gabungkan dengan file yang sudah dipilih sebelumnya
+  _multiFiles[feature] = _multiFiles[feature].concat(files);
+  
+  var grid = document.getElementById(previewId);
+  var countEl = document.getElementById(feature + 'FotoCount');
+  grid.innerHTML = '';
+  
+  _multiFiles[feature].forEach(function(file, idx) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var item = document.createElement('div');
+      item.className = 'multi-preview-item';
+      item.innerHTML =
+        '<img src="' + e.target.result + '" alt="foto ' + (idx+1) + '">' +
+        '<button class="remove-photo" onclick="removeMultiPhoto(\'' + feature + '\',' + idx + ')" title="Hapus foto ini">✕</button>' +
+        '<div class="photo-num">' + (idx+1) + '</div>';
+      grid.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  });
+  
+  if (countEl) {
+    var n = _multiFiles[feature].length;
+    countEl.style.display = 'inline-block';
+    countEl.textContent = n + ' foto dipilih';
+  }
+  
+  // Reset input agar bisa pilih file yang sama lagi jika mau
+  input.value = '';
+}
+
+function removeMultiPhoto(feature, idx) {
+  _multiFiles[feature].splice(idx, 1);
+  // Trigger preview ulang tanpa file input
+  var previewId = feature + 'FotoPreview';
+  var countEl = document.getElementById(feature + 'FotoCount');
+  var grid = document.getElementById(previewId);
+  if (!grid) return;
+  grid.innerHTML = '';
+  
+  _multiFiles[feature].forEach(function(file, i) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var item = document.createElement('div');
+      item.className = 'multi-preview-item';
+      item.innerHTML =
+        '<img src="' + e.target.result + '" alt="foto ' + (i+1) + '">' +
+        '<button class="remove-photo" onclick="removeMultiPhoto(\'' + feature + '\',' + i + ')" title="Hapus foto ini">✕</button>' +
+        '<div class="photo-num">' + (i+1) + '</div>';
+      grid.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  });
+  
+  if (countEl) {
+    var n = _multiFiles[feature].length;
+    if (n === 0) { countEl.style.display = 'none'; }
+    else { countEl.textContent = n + ' foto dipilih'; }
+  }
+}
+
+async function uploadMultiplePhotos(feature) {
+  var files = _multiFiles[feature] || [];
+  if (!files.length) return [];
+  showToast('⏳ Mengupload ' + files.length + ' foto...');
+  var urls = [];
+  for (var i = 0; i < files.length; i++) {
+    showToast('⏳ Upload foto ' + (i+1) + ' dari ' + files.length + '...');
+    var url = await uploadToCloudinary(files[i]);
+    if (url) urls.push(url);
+  }
+  return urls;
+}
+
+function clearMultiPhotos(feature) {
+  _multiFiles[feature] = [];
+  var previewId = feature + 'FotoPreview';
+  var countId = feature + 'FotoCount';
+  var grid = document.getElementById(previewId);
+  var countEl = document.getElementById(countId);
+  if (grid) grid.innerHTML = '';
+  if (countEl) countEl.style.display = 'none';
+}
+
+// Galeri multi upload
+function handleGaleriMultiUpload(input) {
+  var files = Array.from(input.files);
+  if (!files.length) return;
+  _multiFiles['galeri'] = _multiFiles['galeri'].concat(files);
+  
+  var grid = document.getElementById('previewGaleri');
+  var countEl = document.getElementById('galeriCount');
+  grid.innerHTML = '';
+  
+  _multiFiles['galeri'].forEach(function(file, idx) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var item = document.createElement('div');
+      item.className = 'multi-preview-item';
+      item.innerHTML =
+        '<img src="' + e.target.result + '">' +
+        '<button class="remove-photo" onclick="removeMultiPhoto(\'galeri\',' + idx + ')">✕</button>' +
+        '<div class="photo-num">' + (idx+1) + '</div>';
+      grid.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  });
+  
+  if (countEl) {
+    countEl.style.display = 'inline-block';
+    countEl.textContent = _multiFiles['galeri'].length + ' foto dipilih';
+  }
+  input.value = '';
+}
+
+
+function previewVideo(input, previewId) {
+  var file = input.files[0];
+  if (!file) return;
+  var prev = document.getElementById(previewId);
+  prev.src = URL.createObjectURL(file);
+  prev.style.display = 'block';
+  prev.play().catch(function(){});
+}
+
+function setMediaMode(feature, mode) {
+  if (feature === 'berita') {
+    beritaMediaMode = mode;
+    document.getElementById('beritaFotoSection').style.display = mode === 'foto' ? 'block' : 'none';
+    document.getElementById('beritaVideoSection').style.display = mode === 'video' ? 'block' : 'none';
+  } else if (feature === 'ekskul') {
+    ekskulMediaMode = mode;
+    document.getElementById('ekskulFotoSection').style.display = mode === 'foto' ? 'block' : 'none';
+    document.getElementById('ekskulVideoSection').style.display = mode === 'video' ? 'block' : 'none';
+  }
+}
+
+function setGaleriMode(mode) {
+  galeriMode = mode;
+  document.getElementById('galeriUploadFoto').style.display = mode === 'foto' ? 'block' : 'none';
+  document.getElementById('galeriUploadVideo').style.display = mode === 'video' ? 'block' : 'none';
+}
+
+function handleGaleriVideoUpload(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var prev = document.getElementById('previewGaleriVideo');
+  prev.src = URL.createObjectURL(file);
+  prev.style.display = 'block';
+  prev.play().catch(function(){});
+}
+
+// Video lightbox
+function openVideoLightbox(src) {
+  var lb = document.getElementById('lightbox');
+  lb.innerHTML = '<button id="lightbox-close" onclick="closeLightbox()" style="position:absolute;top:1rem;right:1.5rem;color:white;font-size:2rem;cursor:pointer;background:none;border:none">✕</button>'
+    + '<video src="' + src + '" controls autoplay style="max-width:90vw;max-height:85vh;border-radius:8px" onclick="event.stopPropagation()"></video>';
+  lb.classList.add('open');
+}
+
+// ============================================================
+// PASSWORD CHANGE
+// ============================================================
+async function changePassword() {
+  const lama = document.getElementById('passLama').value;
+  const baru = document.getElementById('passBaru').value;
+  const konfirm = document.getElementById('passKonfirm').value;
+  
+  if (!lama || !baru || !konfirm) return showPassAlert('Semua field harus diisi', true);
+  if (baru !== konfirm) return showPassAlert('Password baru tidak cocok', true);
+  if (baru.length < 6) return showPassAlert('Password minimal 6 karakter', true);
+  
+  // Cek password lama
+  let storedPass = CONFIG.ADMIN_DEFAULT_PASS;
+  try {
+    if (sb && !CONFIG.SUPABASE_URL.includes('YOUR_PROJECT')) {
+      const rows = await dbSelect('settings');
+      const map = {};
+      rows.forEach(r => map[r.key] = r.value);
+      if (map.admin_password) storedPass = map.admin_password;
+    }
+  } catch(e) { /* pakai default */ }
+
+  if (lama !== storedPass) return showPassAlert('Password lama salah!', true);
+
+  try {
+    if (sb && !CONFIG.SUPABASE_URL.includes('YOUR_PROJECT')) {
+      await dbUpsert('settings', { key: 'admin_password', value: baru });
+      showPassAlert('✅ Password berhasil diubah!', false);
+    } else {
+      // Simpan sementara di memori jika Supabase belum dikonfigurasi
+      CONFIG.ADMIN_DEFAULT_PASS = baru;
+      showPassAlert('✅ Password diubah (sesi ini saja — hubungkan Supabase agar permanen)', false);
+    }
+    document.getElementById('passLama').value = '';
+    document.getElementById('passBaru').value = '';
+    document.getElementById('passKonfirm').value = '';
+  } catch(e) {
+    showPassAlert('❌ ' + e.message, true);
+  }
+}
+
+function showPassAlert(msg, isError) {
+  const el = document.getElementById('passAlert');
+  el.className = 'alert-box ' + (isError ? 'alert-error' : 'alert-success');
+  el.style.display = 'block';
+  el.textContent = msg;
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+function doLogin() {
+  var user = document.getElementById('loginUser').value.trim();
+  var pass = document.getElementById('loginPass').value;
+  var alertEl = document.getElementById('loginAlert');
+
+  if (!user || !pass) {
+    alertEl.innerHTML = '<div class="alert-box alert-error">Username dan password harus diisi!</div>';
+    return;
+  }
+
+  alertEl.innerHTML = '';
+
+  // Cek kredensial dari Supabase dulu, kalau gagal pakai default
+  function checkLogin(storedUser, storedPass) {
+    if (user === storedUser && pass === storedPass) {
+      isLoggedIn = true;
+      sessionStorage.setItem('alfiil_admin', '1');
+      closeLogin();
+      openAdmin();
+    } else {
+      alertEl.innerHTML = '<div class="alert-box alert-error">❌ Username atau password salah!<br><small>Default: admin / alfiil2024</small></div>';
+    }
+  }
+
+  if (sb && !CONFIG.SUPABASE_URL.includes('YOUR_PROJECT')) {
+    dbSelect('settings').then(function(rows) {
+      var map = {};
+      rows.forEach(function(r){ map[r.key] = r.value; });
+      var su = map.admin_username || CONFIG.ADMIN_DEFAULT_USER;
+      var sp = map.admin_password || CONFIG.ADMIN_DEFAULT_PASS;
+      checkLogin(su, sp);
+    }).catch(function() {
+      checkLogin(CONFIG.ADMIN_DEFAULT_USER, CONFIG.ADMIN_DEFAULT_PASS);
+    });
+  } else {
+    checkLogin(CONFIG.ADMIN_DEFAULT_USER, CONFIG.ADMIN_DEFAULT_PASS);
+  }
+}
+
+function openLogin() {
+  var m = document.getElementById('loginModal');
+  m.style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginAlert').innerHTML = '';
+  setTimeout(function(){ document.getElementById('loginUser').focus(); }, 100);
+}
+function closeLogin() {
+  document.getElementById('loginModal').style.display = 'none';
+}
+
+// ============================================================
+// ADMIN PANEL NAVIGATION
+// ============================================================
+function openAdmin() {
+  var p = document.getElementById('adminPanel');
+  p.style.display = 'flex';
+  showAdmin('dashboard');
+  adminLoadBerita();
+  adminLoadEkskul();
+  adminLoadGaleri();
+  adminLoadGuru();
+  adminLoadProfil();
+}
+
+function closeAdmin() {
+  document.getElementById('adminPanel').style.display = 'none';
+  isLoggedIn = false;
+  sessionStorage.removeItem('alfiil_admin');
+}
+
+function showAdmin(sec) {
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.admin-menu button').forEach(b => b.classList.remove('active'));
+  document.getElementById('admin-' + sec).classList.add('active');
+  document.getElementById('menu-' + sec).classList.add('active');
+}
+
+// ============================================================
+// BERITA DETAIL
+// ============================================================
+let beritaAllCache = [];
+async function openBeritaDetail(idx) {
+  // Ambil data dari cache
+  if (!beritaAllCache.length) {
+    beritaAllCache = await dbSelect('berita', 'tanggal');
+  }
+  var b = (typeof idx === 'number') ? beritaAllCache[idx] : beritaAllCache.find(function(x){ return x.id == idx; });
+  if (!b) return;
+
+  // Siapkan media (foto pertama jika array, atau video)
+  var mediaHtml = '';
+  if (b.video) {
+    mediaHtml = '<video src="' + b.video + '" controls style="width:100%;border-radius:12px;margin-bottom:1rem;max-height:350px;object-fit:cover"></video>';
+  } else if (b.foto) {
+    var fotos = [];
+    try { fotos = JSON.parse(b.foto); if (!Array.isArray(fotos)) fotos = [b.foto]; }
+    catch(e) { fotos = [b.foto]; }
+    if (fotos.length === 1) {
+      mediaHtml = '<img src="' + fotos[0] + '" style="width:100%;border-radius:12px;margin-bottom:1rem;max-height:350px;object-fit:cover" loading="lazy">';
+    } else if (fotos.length > 1) {
+      // Slideshow untuk multi foto
+      var slidesHtml = fotos.map(function(u, i) {
+        return '<img src="' + u + '" style="width:100%;border-radius:12px;max-height:350px;object-fit:cover;display:' + (i === 0 ? 'block' : 'none') + '" data-slide="' + i + '" loading="lazy">';
+      }).join('');
+      var dotsHtml = fotos.map(function(_, i) {
+        return '<span onclick="detailSlide(this,' + i + ')" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + (i === 0 ? 'var(--emas)' : 'rgba(0,0,0,0.2)') + ';cursor:pointer;margin:0 3px;transition:background 0.2s"></span>';
+      }).join('');
+      mediaHtml = '<div id="detailSlideshow" style="margin-bottom:1rem">' +
+        slidesHtml +
+        '<div style="text-align:center;margin-top:8px">' + dotsHtml + '</div>' +
+        '<div style="text-align:center;font-size:0.75rem;color:var(--abu);margin-top:4px">📷 ' + fotos.length + ' foto</div>' +
+        '</div>';
+    }
+  }
+
+  var overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.display = 'flex';
+  overlay.innerHTML =
+    '<div class="modal modal-lg" style="max-height:90vh;overflow-y:auto">' +
+      '<button class="modal-close" onclick="this.closest(\'.modal-overlay\').remove()" style="position:sticky;top:0;float:right;z-index:10">✕</button>' +
+      mediaHtml +
+      '<div style="color:var(--emas);font-size:0.82rem;margin-bottom:0.5rem;letter-spacing:1px">' + formatDate(b.tanggal||b.created_at) + '</div>' +
+      '<div class="modal-title" style="margin-bottom:1rem">' + escHtml(b.judul) + '</div>' +
+      '<div style="color:var(--abu);line-height:1.9;font-size:1rem;white-space:pre-wrap">' + escHtml(b.isi||'') + '</div>' +
+    '</div>';
+
+  // Tutup saat klik overlay
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.remove();
+  });
+
+  document.body.appendChild(overlay);
+}
+
+function detailSlide(dot, idx) {
+  var container = document.getElementById('detailSlideshow');
+  if (!container) return;
+  var imgs = container.querySelectorAll('img');
+  var dots = dot.parentNode.querySelectorAll('span');
+  imgs.forEach(function(img, i) { img.style.display = i === idx ? 'block' : 'none'; });
+  dots.forEach(function(d, i) { d.style.background = i === idx ? 'var(--emas)' : 'rgba(0,0,0,0.2)'; });
+}
+
+// ============================================================
+// LIGHTBOX
+// ============================================================
+function openLightbox(src) {
+  var img = document.getElementById('lightboxImg');
+  var vid = document.getElementById('lightboxVideo');
+  img.src = src; img.style.display = 'block';
+  vid.style.display = 'none'; vid.pause();
+  document.getElementById('lightbox').classList.add('open');
+}
+function openLightboxVideo(src) {
+  var img = document.getElementById('lightboxImg');
+  var vid = document.getElementById('lightboxVideo');
+  img.style.display = 'none'; img.src = '';
+  vid.src = src; vid.style.display = 'block';
+  vid.play();
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  var vid = document.getElementById('lightboxVideo');
+  vid.pause(); vid.src = '';
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+
+// ============================================================
+// MODALS
+// ============================================================
+function openModal(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('open');
+  el.style.display = 'flex';
+}
+function closeModal(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('open');
+  el.style.display = 'none';
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay, .admin-modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      const id = this.id;
+      if (id === 'loginModal') { closeLogin(); return; }
+      if (id === 'adminPanel') return;
+      closeModal(id);
+    }
+  });
+});
+
+// ============================================================
+// NAVBAR
+// ============================================================
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+  });
+});
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function escHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+  } catch { return dateStr; }
+}
+
+function getEkskulEmoji(nama) {
+  const map = {
+    pramuka:'⚜', pmr:'🏥', osis:'🏛', basket:'🏀', voli:'🏐', futsal:'⚽',
+    badminton:'🏸', pencak:'🥋', silat:'🥋', seni:'🎨', musik:'🎵', teater:'🎭',
+    tari:'💃', tahfidz:'📖', rohis:'🕌', english:'🌐', wirausaha:'💼'
+  };
+  const low = (nama||'').toLowerCase();
+  for (const [k,v] of Object.entries(map)) {
+    if (low.includes(k)) return v;
+  }
+  return '🌟';
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+
+// ============================================================
+// SECRET ADMIN ACCESS — 5 CARA
+// 1. Ketik "alfiil" kapan saja (di luar input)     → semua device
+// 2. Klik pojok kanan bawah layar 3x cepat          → semua device  
+// 3. Swipe kiri-kanan-kiri di HP                    → HP/tablet
+// 4. Ctrl + Shift + A di keyboard                   → laptop/PC
+// 5. Tambahkan ?adminpage=1 di URL                  → semua device
+// ============================================================
+
+// --- CARA 1: Ketik "alfiil" ---
+var _seq = [], _code = ['a','l','f','i','i','l'];
+document.addEventListener('keypress', function(e) {
+  if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  _seq.push(e.key.toLowerCase());
+  if (_seq.length > _code.length) _seq.shift();
+  if (_seq.join('') === _code.join('')) { _seq = []; openLogin(); }
+});
+
+// --- CARA 2: Triple-click pojok kanan bawah (area 80x80px) ---
+var _cornerClicks = 0, _cornerTimer = null;
+document.addEventListener('click', function(e) {
+  var fromRight = window.innerWidth - e.clientX;
+  var fromBottom = window.innerHeight - e.clientY;
+  if (fromRight <= 80 && fromBottom <= 80) {
+    _cornerClicks++;
+    clearTimeout(_cornerTimer);
+    if (_cornerClicks >= 3) {
+      _cornerClicks = 0;
+      openLogin();
+    } else {
+      _cornerTimer = setTimeout(function(){ _cornerClicks = 0; }, 1500);
+    }
+  }
+});
+
+// --- CARA 3: Swipe kiri-kanan-kiri di HP ---
+(function() {
+  var startX = 0, endX = 0;
+  var swipes = [], target = ['L','R','L'];
+  var swipeTimer = null;
+  document.addEventListener('touchstart', function(e) {
+    startX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  document.addEventListener('touchend', function(e) {
+    endX = e.changedTouches[0].screenX;
+    var diff = endX - startX;
+    if (Math.abs(diff) < 60) return;
+    swipes.push(diff < 0 ? 'L' : 'R');
+    if (swipes.length > 3) swipes.shift();
+    clearTimeout(swipeTimer);
+    if (swipes.join('') === target.join('')) { swipes = []; openLogin(); }
+    else { swipeTimer = setTimeout(function(){ swipes = []; }, 3000); }
+  }, { passive: true });
+})();
+
+// --- CARA 4: Ctrl + Shift + A ---
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+    e.preventDefault();
+    openLogin();
+  }
+});
+
+// --- CARA 5: URL parameter ?adminpage=1 ---
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('adminpage') === '1') {
+    window.history.replaceState({}, '', window.location.pathname);
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(openLogin, 800);
+    });
+    // Jika DOMContentLoaded sudah lewat
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(openLogin, 300);
+    }
+  }
+})();
+
+// EMAIL HANDLER (anti Cloudflare encoding)
+function bukaEmail() {
+  var u = 'smaalfiil15';
+  var d = 'gmail.com';
+  window.location.href = 'mailto:' + u + '@' + d;
+}
+</script>
+</body>
+</html>
