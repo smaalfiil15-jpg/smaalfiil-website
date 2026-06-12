@@ -943,72 +943,180 @@ footer a { color:var(--emas-muda); text-decoration:none; }
       <p class="section-desc">Landasan arah dan gerak langkah SMA AL-FIIL dalam mendidik generasi bangsa</p>
     </div>
 
-    <!-- Quotes Pendidikan -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-bottom:2.5rem">
-      <div style="background:var(--putih);border-radius:14px;padding:1.5rem 1.6rem;border-top:4px solid var(--emas);box-shadow:0 4px 16px rgba(0,0,0,0.06);position:relative">
-        <div style="font-size:3rem;color:var(--emas);font-family:'Playfair Display',serif;line-height:0.8;margin-bottom:0.6rem;opacity:0.5">"</div>
-        <p style="color:var(--gelap);font-size:0.95rem;line-height:1.7;font-style:italic;font-family:'Crimson Pro',serif">Pendidikan adalah senjata paling ampuh yang bisa kamu gunakan untuk mengubah dunia.</p>
-        <p style="color:var(--emas);font-size:0.78rem;font-weight:700;margin-top:0.8rem;letter-spacing:0.5px">— Nelson Mandela</p>
-      </div>
-      <div style="background:var(--putih);border-radius:14px;padding:1.5rem 1.6rem;border-top:4px solid var(--hijau-muda);box-shadow:0 4px 16px rgba(0,0,0,0.06);position:relative">
-        <div style="font-size:3rem;color:var(--hijau-muda);font-family:'Playfair Display',serif;line-height:0.8;margin-bottom:0.6rem;opacity:0.5">"</div>
-        <p style="color:var(--gelap);font-size:0.95rem;line-height:1.7;font-style:italic;font-family:'Crimson Pro',serif">Tujuan pendidikan bukan mengisi ember, melainkan menyalakan api semangat dalam diri.</p>
-        <p style="color:var(--hijau-muda);font-size:0.78rem;font-weight:700;margin-top:0.8rem;letter-spacing:0.5px">— William Butler Yeats</p>
-      </div>
-      <div style="background:var(--putih);border-radius:14px;padding:1.5rem 1.6rem;border-top:4px solid var(--hijau-tua);box-shadow:0 4px 16px rgba(0,0,0,0.06);position:relative">
-        <div style="font-size:3rem;color:var(--hijau-tua);font-family:'Playfair Display',serif;line-height:0.8;margin-bottom:0.6rem;opacity:0.5">"</div>
-        <p style="color:var(--gelap);font-size:0.95rem;line-height:1.7;font-style:italic;font-family:'Crimson Pro',serif">Guru yang baik tidak hanya mengajarkan ilmu, tetapi menginspirasi siswa untuk terus belajar seumur hidup.</p>
-        <p style="color:var(--hijau-tua);font-size:0.78rem;font-weight:700;margin-top:0.8rem;letter-spacing:0.5px">— Ki Hajar Dewantara</p>
-      </div>
-    </div>
     <style>
+      /* ===== QUOTES GRID ===== */
+      .quotes-grid {
+        display:grid;
+        grid-template-columns:1fr 1fr 1fr;
+        gap:1.2rem;
+        margin-bottom:2.5rem;
+      }
+      .quote-card {
+        background:var(--putih);
+        border-radius:14px;
+        padding:1.5rem 1.6rem;
+        box-shadow:0 4px 16px rgba(0,0,0,0.06);
+        position:relative;
+      }
+      .quote-mark {
+        font-size:3rem;
+        font-family:'Playfair Display',serif;
+        line-height:0.8;
+        margin-bottom:0.6rem;
+        opacity:0.5;
+      }
+      .quote-text {
+        color:var(--gelap);
+        font-size:0.95rem;
+        line-height:1.7;
+        font-style:italic;
+        font-family:'Crimson Pro',serif;
+      }
+      .quote-author {
+        font-size:0.78rem;
+        font-weight:700;
+        margin-top:0.8rem;
+        letter-spacing:0.5px;
+      }
+
+      /* ===== VM TABLE ===== */
+      .vm-table-wrap {
+        overflow:hidden;
+        border-radius:16px;
+        border:1px solid rgba(26,58,107,0.15);
+        box-shadow:0 4px 24px rgba(0,0,0,0.07);
+      }
+      .vm-table {
+        width:100%;
+        border-collapse:collapse;
+        background:var(--putih);
+      }
+      .vm-th-visi {
+        width:50%;
+        padding:1.1rem 2rem;
+        background:linear-gradient(90deg,var(--hijau-tua),var(--hijau));
+        color:var(--putih);
+        font-family:'Playfair Display',serif;
+        font-size:1.15rem;
+        font-weight:700;
+        text-align:center;
+        letter-spacing:0.5px;
+        border-right:2px solid rgba(200,150,12,0.4);
+      }
+      .vm-th-misi {
+        width:50%;
+        padding:1.1rem 2rem;
+        background:linear-gradient(90deg,var(--hijau),var(--hijau-muda));
+        color:var(--putih);
+        font-family:'Playfair Display',serif;
+        font-size:1.15rem;
+        font-weight:700;
+        text-align:center;
+        letter-spacing:0.5px;
+      }
+      .vm-td-visi {
+        padding:2rem;
+        vertical-align:top;
+        border-right:2px solid rgba(200,150,12,0.2);
+        background:var(--krem);
+        width:50%;
+      }
+      .vm-td-misi {
+        padding:2rem;
+        vertical-align:top;
+        background:var(--putih);
+        width:50%;
+      }
+      .nilai-grid {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:0.8rem;
+      }
+      .nilai-card {
+        background:var(--putih);
+        border-radius:10px;
+        padding:0.8rem 1rem;
+        border-left:3px solid var(--emas);
+        box-shadow:0 2px 8px rgba(0,0,0,0.05);
+      }
+      .nilai-title { font-weight:700; color:var(--hijau-tua); font-size:0.9rem; margin-bottom:0.2rem; }
+      .nilai-desc  { color:var(--abu); font-size:0.8rem; line-height:1.4; }
+      .vm-tagline-box {
+        margin-top:2rem;
+        padding:1.2rem 1.4rem;
+        background:linear-gradient(135deg,rgba(10,31,68,0.04),rgba(200,150,12,0.06));
+        border-radius:12px;
+        border:1px dashed rgba(200,150,12,0.3);
+      }
+
+      /* ===== RESPONSIVE MOBILE ===== */
       @media(max-width:768px){
-        .quotes-grid { grid-template-columns:1fr !important; }
+        .quotes-grid { grid-template-columns:1fr; }
+
+        /* Tabel jadi stack vertikal di HP */
+        .vm-table, .vm-table thead, .vm-table tbody,
+        .vm-table tr, .vm-th-visi, .vm-th-misi,
+        .vm-td-visi, .vm-td-misi { display:block; width:100%; }
+
+        .vm-th-visi { border-right:none; border-bottom:1px solid rgba(200,150,12,0.3); }
+        .vm-td-visi { border-right:none; border-bottom:3px solid rgba(200,150,12,0.2); }
+
+        .nilai-grid { grid-template-columns:1fr 1fr; }
+      }
+
+      @media(max-width:480px){
+        .nilai-grid { grid-template-columns:1fr; }
+        .vm-td-visi, .vm-td-misi { padding:1.2rem; }
+        .quotes-grid { gap:0.9rem; }
+        .quote-card { padding:1.2rem; }
       }
     </style>
 
+    <!-- Quotes Pendidikan -->
+    <div class="quotes-grid">
+      <div class="quote-card" style="border-top:4px solid var(--emas)">
+        <div class="quote-mark" style="color:var(--emas)">"</div>
+        <p class="quote-text">Pendidikan adalah senjata paling ampuh yang bisa kamu gunakan untuk mengubah dunia.</p>
+        <p class="quote-author" style="color:var(--emas)">— Nelson Mandela</p>
+      </div>
+      <div class="quote-card" style="border-top:4px solid var(--hijau-muda)">
+        <div class="quote-mark" style="color:var(--hijau-muda)">"</div>
+        <p class="quote-text">Tujuan pendidikan bukan mengisi ember, melainkan menyalakan api semangat dalam diri.</p>
+        <p class="quote-author" style="color:var(--hijau-muda)">— William Butler Yeats</p>
+      </div>
+      <div class="quote-card" style="border-top:4px solid var(--hijau-tua)">
+        <div class="quote-mark" style="color:var(--hijau-tua)">"</div>
+        <p class="quote-text">Guru yang baik tidak hanya mengajarkan ilmu, tetapi menginspirasi siswa untuk terus belajar seumur hidup.</p>
+        <p class="quote-author" style="color:var(--hijau-tua)">— Ki Hajar Dewantara</p>
+      </div>
+    </div>
+
     <!-- Tabel Visi & Misi -->
-    <div style="overflow:hidden;border-radius:16px;border:1px solid rgba(26,58,107,0.15);box-shadow:0 4px 24px rgba(0,0,0,0.07)">
-      <table style="width:100%;border-collapse:collapse;background:var(--putih)">
-        <!-- Header tabel -->
+    <div class="vm-table-wrap">
+      <table class="vm-table">
         <thead>
           <tr>
-            <th style="width:50%;padding:1.1rem 2rem;background:linear-gradient(90deg,var(--hijau-tua),var(--hijau));color:var(--putih);font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;text-align:center;letter-spacing:0.5px;border-right:2px solid rgba(200,150,12,0.4)">Visi</th>
-            <th style="width:50%;padding:1.1rem 2rem;background:linear-gradient(90deg,var(--hijau),var(--hijau-muda));color:var(--putih);font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;text-align:center;letter-spacing:0.5px">Misi</th>
+            <th class="vm-th-visi">Visi</th>
+            <th class="vm-th-misi">Misi</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <!-- Kolom Visi -->
-            <td style="padding:2rem;vertical-align:top;border-right:2px solid rgba(200,150,12,0.2);background:var(--krem)">
+            <td class="vm-td-visi">
               <p id="visiText" style="color:var(--gelap);line-height:1.9;font-size:1.02rem;font-style:italic;font-weight:700;font-family:'Crimson Pro',serif;margin-bottom:2rem">
                 "Terwujudnya sekolah yang berprestasi, mandiri, dan kreatif berdasarkan iman dan taqwa."
               </p>
-              <!-- Nilai-nilai inti sebagai pengisi ruang -->
-              <div style="margin-top:auto">
-                <p style="font-family:'Playfair Display',serif;color:var(--hijau-tua);font-size:0.88rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid rgba(200,150,12,0.3);padding-bottom:0.5rem">Nilai Inti Kami</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
-                  <div style="background:var(--putih);border-radius:10px;padding:0.8rem 1rem;border-left:3px solid var(--emas);box-shadow:0 2px 8px rgba(0,0,0,0.05)">
-                    <div style="font-weight:700;color:var(--hijau-tua);font-size:0.9rem;margin-bottom:0.2rem">Iman & Taqwa</div>
-                    <div style="color:var(--abu);font-size:0.8rem;line-height:1.4">Landasan spiritual dalam setiap langkah</div>
-                  </div>
-                  <div style="background:var(--putih);border-radius:10px;padding:0.8rem 1rem;border-left:3px solid var(--emas);box-shadow:0 2px 8px rgba(0,0,0,0.05)">
-                    <div style="font-weight:700;color:var(--hijau-tua);font-size:0.9rem;margin-bottom:0.2rem">Prestasi</div>
-                    <div style="color:var(--abu);font-size:0.8rem;line-height:1.4">Unggul dalam akademik dan non-akademik</div>
-                  </div>
-                  <div style="background:var(--putih);border-radius:10px;padding:0.8rem 1rem;border-left:3px solid var(--emas);box-shadow:0 2px 8px rgba(0,0,0,0.05)">
-                    <div style="font-weight:700;color:var(--hijau-tua);font-size:0.9rem;margin-bottom:0.2rem">Kemandirian</div>
-                    <div style="color:var(--abu);font-size:0.8rem;line-height:1.4">Membentuk pribadi yang percaya diri</div>
-                  </div>
-                  <div style="background:var(--putih);border-radius:10px;padding:0.8rem 1rem;border-left:3px solid var(--emas);box-shadow:0 2px 8px rgba(0,0,0,0.05)">
-                    <div style="font-weight:700;color:var(--hijau-tua);font-size:0.9rem;margin-bottom:0.2rem">Kreativitas</div>
-                    <div style="color:var(--abu);font-size:0.8rem;line-height:1.4">Mendorong inovasi dan daya cipta siswa</div>
-                  </div>
-                </div>
+              <p style="font-family:'Playfair Display',serif;color:var(--hijau-tua);font-size:0.88rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid rgba(200,150,12,0.3);padding-bottom:0.5rem">Nilai Inti Kami</p>
+              <div class="nilai-grid">
+                <div class="nilai-card"><div class="nilai-title">Iman & Taqwa</div><div class="nilai-desc">Landasan spiritual dalam setiap langkah</div></div>
+                <div class="nilai-card"><div class="nilai-title">Prestasi</div><div class="nilai-desc">Unggul dalam akademik dan non-akademik</div></div>
+                <div class="nilai-card"><div class="nilai-title">Kemandirian</div><div class="nilai-desc">Membentuk pribadi yang percaya diri</div></div>
+                <div class="nilai-card"><div class="nilai-title">Kreativitas</div><div class="nilai-desc">Mendorong inovasi dan daya cipta siswa</div></div>
               </div>
             </td>
             <!-- Kolom Misi -->
-            <td style="padding:2rem;vertical-align:top;background:var(--putih)">
+            <td class="vm-td-misi">
               <ul class="misi-list" id="misiList">
                 <li>Meningkatkan keimanan dan ketaqwaan bagi seluruh warga sekolah</li>
                 <li>Melaksanakan proses pembelajaran yang interaktif, inspiratif dan menyenangkan</li>
@@ -1018,8 +1126,7 @@ footer a { color:var(--emas-muda); text-decoration:none; }
                 <li>Meningkatkan prestasi dan kreatifitas siswa di bidang seni, budaya dan olahraga</li>
                 <li>Meningkatkan keterampilan siswa di bidang kewirausahaan</li>
               </ul>
-              <!-- Tagline penutup sebagai pengisi ruang -->
-              <div style="margin-top:2rem;padding:1.2rem 1.4rem;background:linear-gradient(135deg,rgba(10,31,68,0.04),rgba(200,150,12,0.06));border-radius:12px;border:1px dashed rgba(200,150,12,0.3)">
+              <div class="vm-tagline-box">
                 <p style="color:var(--hijau-tua);font-family:'Playfair Display',serif;font-size:0.95rem;line-height:1.7;font-style:italic;text-align:center">
                   "Mendidik bukan sekadar mengajar — melainkan menyalakan cahaya dalam diri setiap siswa untuk menerangi masa depan."
                 </p>
